@@ -48,6 +48,7 @@ target_sources(${ZC_LIB_NAME}
         "${CMAKE_CURRENT_LIST_DIR}/include/zc_server.h"
         "${CMAKE_CURRENT_LIST_DIR}/include/zc_alloc.h"
         "${CMAKE_CURRENT_LIST_DIR}/include/zc_client.h"
+        "${CMAKE_CURRENT_LIST_DIR}/include/zc_assert.h"
     )
 target_include_directories(${ZC_LIB_NAME}
     PUBLIC

@@ -26,13 +26,11 @@ extern "C"
 
     ZCEXPORT void zc_log(int level, const char *fmt, ...);
 
-    #define LOGV(expr, ...) zc_log(zc_log_level_verbose, (expr), __VA_ARGS__);
-    #define LOGD(expr, ...) zc_log(zc_log_level_debug, (expr), __VA_ARGS__);
-    #define LOGW(expr, ...) zc_log(zc_log_level_warning, (expr), __VA_ARGS__);
-    #define LOGE(expr, ...) zc_log(zc_log_level_error, (expr), __VA_ARGS__);
-    #define LOGF(expr, ...) zc_log(zc_log_level_fatal, (expr), __VA_ARGS__);
-  
-  
+#define LOGV(expr, ...) zc_log(zc_log_level_verbose, (expr), __VA_ARGS__);
+#define LOGD(expr, ...) zc_log(zc_log_level_debug, (expr), __VA_ARGS__);
+#define LOGW(expr, ...) zc_log(zc_log_level_warning, (expr), __VA_ARGS__);
+#define LOGE(expr, ...) zc_log(zc_log_level_error, (expr), __VA_ARGS__);
+#define LOGF(expr, ...) zc_log(zc_log_level_fatal, (expr), __VA_ARGS__);
 
 #ifdef __cplusplus
 }

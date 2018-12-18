@@ -10,6 +10,7 @@
 #include "zc_server.h"
 #include "zc_log.h"
 #include "zc_alloc.h"
+#include "zc_assert.h"
 
 // ---------------------------------------------------------------------- Private Declarations
 
@@ -31,6 +32,9 @@ ZCPRIVATE int zc_set_socket_non_blocking(int fd);
 ZCPRIVATE int zc_enable_tcp_no_delay(int fd);
 ZCPRIVATE int zc_enable_keep_alive(int fd);
 ZCPRIVATE int zc_enable_reuse_port_address(int fd);
+ZCPRIVATE void __server_accept_cb(EV_P_ ev_io *watcher, int revents);
+ZCPRIVATE void recv_socket_cb(struct ev_loop *loop,ev_io *w, int revents);
+ZCPRIVATE void write_socket_cb(struct ev_loop *loop,ev_io *w, int revents);
 
 // ---------------------------------------------------------------------- Public Impl
 static zc_server_t g_server;
@@ -54,16 +58,16 @@ zc_server_t *zc_server_new(const char *path)
 
 ZCEXPORT int zc_server_start(zc_server_t *server)
 {
-  
-  zc_assert (server->evt_loop_ == 0);
+  zc_assert_null((server->evt_loop_)); //not null whoa
   server->evt_loop_ = EV_DEFAULT;
-  
+
   int err = zc_create_socket(server, server->unix_socket_path_);
   if (err == zc_ok)
   {
     LOGV("socket created.", "");
     zc_log(zc_log_level_verbose, "yoyo %s", "whoattttt");
   }
+  
   return 0;
 }
 
@@ -71,6 +75,10 @@ ZCEXPORT int zc_server_start(zc_server_t *server)
 int zc_create_socket(zc_server_t *server, const char *path)
 {
   int err = zc_socket_error;
+  
+  //
+  // ------------------------- socket
+  //
   server->fd_ = socket(AF_UNIX, SOCK_STREAM, 0);
   if (server->fd_ < 0)
   {
@@ -89,6 +97,9 @@ int zc_create_socket(zc_server_t *server, const char *path)
   server->addr_.sun_family = AF_UNIX;
   strncpy(server->addr_.sun_path, path, sizeof(server->addr_.sun_path) - 1);
 
+  //
+  // ------------------------- access
+  //
   // do we hace access to this path?
   err = access(server->addr_.sun_path, F_OK);
   if (0 == err)
@@ -98,6 +109,9 @@ int zc_create_socket(zc_server_t *server, const char *path)
     return -1;
   }
 
+  //
+  // ------------------------- bind
+  //
   err = bind(server->fd_, (struct sockaddr *)&server->addr_, sizeof(struct sockaddr_un));
   if (err < 0)
   {
@@ -107,6 +121,9 @@ int zc_create_socket(zc_server_t *server, const char *path)
     return -1;
   }
 
+  //
+  // ------------------------- listen
+  //
   err = listen(server->fd_, ZC_SERVER_BACKLOG);
   if (err < 0)
   {
@@ -118,21 +135,30 @@ int zc_create_socket(zc_server_t *server, const char *path)
   }
 
   LOGV("looping...", "");
+  
+  
+  ev_io_init(&server->io_, __server_accept_cb, server->fd_, EV_READ);
+  ev_io_start(server->evt_loop_, &server->io_);
+  
+  ev_run(server->evt_loop_, 0);
+
+  
+#if 0
 
   for (;;)
   {
     int client_fd = accept(server->fd_, 0, 0);
-    if (client_fd < 0)
-    {
-      LOGV("accept error", "");
+  if (client_fd == -1) {
+    if (errno == EAGAIN || errno == EWOULDBLOCK) {
+      return -2;
     }
-    else
-    {
-      //todo: do below inside client??
-      //zc_set_socket_non_blocking(client_fd);
-      //zc_enable_tcp_no_delay(client_fd);
-      //zc_enable_keep_alive(client_fd);
-    }
+  }
+  
+    //todo: do below inside client??
+    //zc_set_socket_non_blocking(client_fd);
+    //zc_enable_tcp_no_delay(client_fd);
+    //zc_enable_keep_alive(client_fd);
+  
     char buf[256] = {0};
     ssize_t bytes;
     while ((bytes = read(client_fd, buf, 255)) > 0)
@@ -142,6 +168,8 @@ int zc_create_socket(zc_server_t *server, const char *path)
   } //end-for
 
   close(server->fd_);
+  
+#endif
 
   LOGV("Looped!", "");
 
@@ -210,4 +238,77 @@ ZCPRIVATE int zc_enable_reuse_port_address(int fd)
   }
 #endif
   return 0;
+}
+
+#pragma mark -- libev callbacks
+void __server_accept_cb(EV_P_ ev_io *io_watcher, int revents) {
+  LOGV("client connected", "");
+  
+  int fd;
+  int s = io_watcher->fd;
+  struct sockaddr_un sin;
+  socklen_t addrlen = sizeof(struct sockaddr);
+  do{
+    fd = accept(s, (struct sockaddr *)&sin, &addrlen);
+    if(fd > 0){
+      break;
+    }
+    if(errno == EAGAIN || errno == EWOULDBLOCK){
+      continue;
+    }
+  }while(1);
+  
+  ev_io* accept_watcher = malloc(sizeof(ev_io));
+  
+  memset(accept_watcher,0x00,sizeof(ev_io));
+  
+  ev_io_init(accept_watcher,recv_socket_cb,fd,EV_READ);
+  ev_io_start(loop,accept_watcher);
+}
+
+#define MAX_BUF_LEN  1024
+void recv_socket_cb(struct ev_loop *loop,ev_io *w, int revents)
+{
+  char buf[MAX_BUF_LEN] = {0};
+  int ret = 0;
+  
+  do{
+    ret = recv(w->fd,buf,MAX_BUF_LEN - 1, 0);
+    
+    if(ret > 0){
+      printf("recv message:\n'%s'\n",buf);
+      ev_io_stop(loop,  w);
+      ev_io_init(w,write_socket_cb,w->fd,EV_WRITE);
+      ev_io_start(loop,w);
+      return;
+    }
+    
+    if(ret == 0){
+      printf("remote socket closed \n");
+      break;
+    }
+    
+    if(errno == EAGAIN ||errno == EWOULDBLOCK){
+      continue;
+    }
+    break;
+  }while(1);
+  
+  close(w->fd);
+  ev_io_stop(loop,w);
+  free(w);
+}
+
+void write_socket_cb(struct ev_loop *loop,ev_io *w, int revents)
+{
+  char buf[MAX_BUF_LEN] = {0};
+  
+  snprintf(buf,MAX_BUF_LEN - 1, "this is test message from libev \n");
+  
+  //write(w->fd,buf,strlen(buf),0);
+  send(w->fd,buf,strlen(buf),0);
+  
+  ev_io_stop(loop,  w);
+  ev_io_init(w,recv_socket_cb,w->fd,EV_READ);
+  ev_io_start(loop,w);
 }
