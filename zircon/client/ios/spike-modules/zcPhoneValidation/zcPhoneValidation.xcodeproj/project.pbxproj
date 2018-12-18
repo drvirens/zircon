@@ -1,0 +1,569 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		043AFF393AD469D1DE563159 /* libPods-zcPhoneValidation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B298943626DC225EFF474321 /* libPods-zcPhoneValidation.a */; };
+		11AEB43121BF9BB400D8DED6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 11AEB43021BF9BB400D8DED6 /* AppDelegate.m */; };
+		11AEB43421BF9BB400D8DED6 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 11AEB43321BF9BB400D8DED6 /* ViewController.m */; };
+		11AEB43721BF9BB400D8DED6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 11AEB43521BF9BB400D8DED6 /* Main.storyboard */; };
+		11AEB43921BF9BB500D8DED6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 11AEB43821BF9BB500D8DED6 /* Assets.xcassets */; };
+		11AEB43C21BF9BB500D8DED6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 11AEB43A21BF9BB500D8DED6 /* LaunchScreen.storyboard */; };
+		11AEB43F21BF9BB500D8DED6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 11AEB43E21BF9BB500D8DED6 /* main.m */; };
+		11AEB44921BF9BB500D8DED6 /* zcPhoneValidationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 11AEB44821BF9BB500D8DED6 /* zcPhoneValidationTests.m */; };
+		11AEB45521BFA48A00D8DED6 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 11AEB45421BFA48A00D8DED6 /* LoginViewController.m */; };
+		4E3AF2EB6A26CBF94E025620 /* libPods-zcPhoneValidationTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13ED9C899446A6CC2018349E /* libPods-zcPhoneValidationTests.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		11AEB44521BF9BB500D8DED6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 11AEB42421BF9BB400D8DED6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 11AEB42B21BF9BB400D8DED6;
+			remoteInfo = zcPhoneValidation;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		11AEB42C21BF9BB400D8DED6 /* zcPhoneValidation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = zcPhoneValidation.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		11AEB42F21BF9BB400D8DED6 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		11AEB43021BF9BB400D8DED6 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		11AEB43221BF9BB400D8DED6 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		11AEB43321BF9BB400D8DED6 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		11AEB43621BF9BB400D8DED6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		11AEB43821BF9BB500D8DED6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		11AEB43B21BF9BB500D8DED6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		11AEB43D21BF9BB500D8DED6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		11AEB43E21BF9BB500D8DED6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		11AEB44421BF9BB500D8DED6 /* zcPhoneValidationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = zcPhoneValidationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		11AEB44821BF9BB500D8DED6 /* zcPhoneValidationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = zcPhoneValidationTests.m; sourceTree = "<group>"; };
+		11AEB44A21BF9BB500D8DED6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		11AEB45321BFA48A00D8DED6 /* LoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		11AEB45421BFA48A00D8DED6 /* LoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		13ED9C899446A6CC2018349E /* libPods-zcPhoneValidationTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-zcPhoneValidationTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		151CA839AD28939B722AD684 /* Pods-zcPhoneValidation.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-zcPhoneValidation.release.xcconfig"; path = "Pods/Target Support Files/Pods-zcPhoneValidation/Pods-zcPhoneValidation.release.xcconfig"; sourceTree = "<group>"; };
+		33F889B0AA6B68B03FC7A1C2 /* Pods-zcPhoneValidationTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-zcPhoneValidationTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-zcPhoneValidationTests/Pods-zcPhoneValidationTests.release.xcconfig"; sourceTree = "<group>"; };
+		46C8A8D46B8A5390670BDAA3 /* Pods-zcPhoneValidationTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-zcPhoneValidationTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-zcPhoneValidationTests/Pods-zcPhoneValidationTests.debug.xcconfig"; sourceTree = "<group>"; };
+		915C9BAF3A40817F656AF07D /* Pods-zcPhoneValidation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-zcPhoneValidation.debug.xcconfig"; path = "Pods/Target Support Files/Pods-zcPhoneValidation/Pods-zcPhoneValidation.debug.xcconfig"; sourceTree = "<group>"; };
+		B298943626DC225EFF474321 /* libPods-zcPhoneValidation.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-zcPhoneValidation.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		11AEB42921BF9BB400D8DED6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				043AFF393AD469D1DE563159 /* libPods-zcPhoneValidation.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		11AEB44121BF9BB500D8DED6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4E3AF2EB6A26CBF94E025620 /* libPods-zcPhoneValidationTests.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		11AEB42321BF9BB400D8DED6 = {
+			isa = PBXGroup;
+			children = (
+				11AEB42E21BF9BB400D8DED6 /* zcPhoneValidation */,
+				11AEB44721BF9BB500D8DED6 /* zcPhoneValidationTests */,
+				11AEB42D21BF9BB400D8DED6 /* Products */,
+				5CC566DF8AAA255F7F75E1AD /* Pods */,
+				FBC1DFFC3E3FD458FF5B6957 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		11AEB42D21BF9BB400D8DED6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				11AEB42C21BF9BB400D8DED6 /* zcPhoneValidation.app */,
+				11AEB44421BF9BB500D8DED6 /* zcPhoneValidationTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		11AEB42E21BF9BB400D8DED6 /* zcPhoneValidation */ = {
+			isa = PBXGroup;
+			children = (
+				11AEB42F21BF9BB400D8DED6 /* AppDelegate.h */,
+				11AEB43021BF9BB400D8DED6 /* AppDelegate.m */,
+				11AEB43221BF9BB400D8DED6 /* ViewController.h */,
+				11AEB43321BF9BB400D8DED6 /* ViewController.m */,
+				11AEB43521BF9BB400D8DED6 /* Main.storyboard */,
+				11AEB43821BF9BB500D8DED6 /* Assets.xcassets */,
+				11AEB43A21BF9BB500D8DED6 /* LaunchScreen.storyboard */,
+				11AEB43D21BF9BB500D8DED6 /* Info.plist */,
+				11AEB43E21BF9BB500D8DED6 /* main.m */,
+				11AEB45321BFA48A00D8DED6 /* LoginViewController.h */,
+				11AEB45421BFA48A00D8DED6 /* LoginViewController.m */,
+			);
+			path = zcPhoneValidation;
+			sourceTree = "<group>";
+		};
+		11AEB44721BF9BB500D8DED6 /* zcPhoneValidationTests */ = {
+			isa = PBXGroup;
+			children = (
+				11AEB44821BF9BB500D8DED6 /* zcPhoneValidationTests.m */,
+				11AEB44A21BF9BB500D8DED6 /* Info.plist */,
+			);
+			path = zcPhoneValidationTests;
+			sourceTree = "<group>";
+		};
+		5CC566DF8AAA255F7F75E1AD /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				915C9BAF3A40817F656AF07D /* Pods-zcPhoneValidation.debug.xcconfig */,
+				151CA839AD28939B722AD684 /* Pods-zcPhoneValidation.release.xcconfig */,
+				46C8A8D46B8A5390670BDAA3 /* Pods-zcPhoneValidationTests.debug.xcconfig */,
+				33F889B0AA6B68B03FC7A1C2 /* Pods-zcPhoneValidationTests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		FBC1DFFC3E3FD458FF5B6957 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B298943626DC225EFF474321 /* libPods-zcPhoneValidation.a */,
+				13ED9C899446A6CC2018349E /* libPods-zcPhoneValidationTests.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		11AEB42B21BF9BB400D8DED6 /* zcPhoneValidation */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 11AEB44D21BF9BB500D8DED6 /* Build configuration list for PBXNativeTarget "zcPhoneValidation" */;
+			buildPhases = (
+				AB48BDDE8350A51D91E278FE /* [CP] Check Pods Manifest.lock */,
+				11AEB42821BF9BB400D8DED6 /* Sources */,
+				11AEB42921BF9BB400D8DED6 /* Frameworks */,
+				11AEB42A21BF9BB400D8DED6 /* Resources */,
+				6DF79684124AEC8745E7CC2A /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = zcPhoneValidation;
+			productName = zcPhoneValidation;
+			productReference = 11AEB42C21BF9BB400D8DED6 /* zcPhoneValidation.app */;
+			productType = "com.apple.product-type.application";
+		};
+		11AEB44321BF9BB500D8DED6 /* zcPhoneValidationTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 11AEB45021BF9BB500D8DED6 /* Build configuration list for PBXNativeTarget "zcPhoneValidationTests" */;
+			buildPhases = (
+				B4BD0C4FA2292E90F62A9F56 /* [CP] Check Pods Manifest.lock */,
+				11AEB44021BF9BB500D8DED6 /* Sources */,
+				11AEB44121BF9BB500D8DED6 /* Frameworks */,
+				11AEB44221BF9BB500D8DED6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				11AEB44621BF9BB500D8DED6 /* PBXTargetDependency */,
+			);
+			name = zcPhoneValidationTests;
+			productName = zcPhoneValidationTests;
+			productReference = 11AEB44421BF9BB500D8DED6 /* zcPhoneValidationTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		11AEB42421BF9BB400D8DED6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1010;
+				ORGANIZATIONNAME = "Virendra Shakya";
+				TargetAttributes = {
+					11AEB42B21BF9BB400D8DED6 = {
+						CreatedOnToolsVersion = 10.1;
+					};
+					11AEB44321BF9BB500D8DED6 = {
+						CreatedOnToolsVersion = 10.1;
+						TestTargetID = 11AEB42B21BF9BB400D8DED6;
+					};
+				};
+			};
+			buildConfigurationList = 11AEB42721BF9BB400D8DED6 /* Build configuration list for PBXProject "zcPhoneValidation" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 11AEB42321BF9BB400D8DED6;
+			productRefGroup = 11AEB42D21BF9BB400D8DED6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				11AEB42B21BF9BB400D8DED6 /* zcPhoneValidation */,
+				11AEB44321BF9BB500D8DED6 /* zcPhoneValidationTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		11AEB42A21BF9BB400D8DED6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				11AEB43C21BF9BB500D8DED6 /* LaunchScreen.storyboard in Resources */,
+				11AEB43921BF9BB500D8DED6 /* Assets.xcassets in Resources */,
+				11AEB43721BF9BB400D8DED6 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		11AEB44221BF9BB500D8DED6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		6DF79684124AEC8745E7CC2A /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-zcPhoneValidation/Pods-zcPhoneValidation-resources.sh",
+				"${PODS_ROOT}/AccountKit/AccountKitStrings.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccountKitStrings.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-zcPhoneValidation/Pods-zcPhoneValidation-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AB48BDDE8350A51D91E278FE /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-zcPhoneValidation-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B4BD0C4FA2292E90F62A9F56 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-zcPhoneValidationTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		11AEB42821BF9BB400D8DED6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				11AEB45521BFA48A00D8DED6 /* LoginViewController.m in Sources */,
+				11AEB43421BF9BB400D8DED6 /* ViewController.m in Sources */,
+				11AEB43F21BF9BB500D8DED6 /* main.m in Sources */,
+				11AEB43121BF9BB400D8DED6 /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		11AEB44021BF9BB500D8DED6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				11AEB44921BF9BB500D8DED6 /* zcPhoneValidationTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		11AEB44621BF9BB500D8DED6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 11AEB42B21BF9BB400D8DED6 /* zcPhoneValidation */;
+			targetProxy = 11AEB44521BF9BB500D8DED6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		11AEB43521BF9BB400D8DED6 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				11AEB43621BF9BB400D8DED6 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		11AEB43A21BF9BB500D8DED6 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				11AEB43B21BF9BB500D8DED6 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		11AEB44B21BF9BB500D8DED6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		11AEB44C21BF9BB500D8DED6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		11AEB44E21BF9BB500D8DED6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 915C9BAF3A40817F656AF07D /* Pods-zcPhoneValidation.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = F38H382JLK;
+				INFOPLIST_FILE = zcPhoneValidation/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.chartboost.proxy.cb.zcPhoneValidation;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		11AEB44F21BF9BB500D8DED6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 151CA839AD28939B722AD684 /* Pods-zcPhoneValidation.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = F38H382JLK;
+				INFOPLIST_FILE = zcPhoneValidation/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.chartboost.proxy.cb.zcPhoneValidation;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		11AEB45121BF9BB500D8DED6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 46C8A8D46B8A5390670BDAA3 /* Pods-zcPhoneValidationTests.debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = F38H382JLK;
+				INFOPLIST_FILE = zcPhoneValidationTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.chartboost.proxy.cb.zcPhoneValidationTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/zcPhoneValidation.app/zcPhoneValidation";
+			};
+			name = Debug;
+		};
+		11AEB45221BF9BB500D8DED6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 33F889B0AA6B68B03FC7A1C2 /* Pods-zcPhoneValidationTests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = F38H382JLK;
+				INFOPLIST_FILE = zcPhoneValidationTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.chartboost.proxy.cb.zcPhoneValidationTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/zcPhoneValidation.app/zcPhoneValidation";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		11AEB42721BF9BB400D8DED6 /* Build configuration list for PBXProject "zcPhoneValidation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				11AEB44B21BF9BB500D8DED6 /* Debug */,
+				11AEB44C21BF9BB500D8DED6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		11AEB44D21BF9BB500D8DED6 /* Build configuration list for PBXNativeTarget "zcPhoneValidation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				11AEB44E21BF9BB500D8DED6 /* Debug */,
+				11AEB44F21BF9BB500D8DED6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		11AEB45021BF9BB500D8DED6 /* Build configuration list for PBXNativeTarget "zcPhoneValidationTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				11AEB45121BF9BB500D8DED6 /* Debug */,
+				11AEB45221BF9BB500D8DED6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 11AEB42421BF9BB400D8DED6 /* Project object */;
+}

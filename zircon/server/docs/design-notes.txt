@@ -1,0 +1,42 @@
+zcServerOptions *options = zcC();
+
+
+
+lsof -i -n -P
+
+> list all open files
+SystemUIS   642 virendra.shakya   17u  IPv4 0xcad97ed9570ac6bf      0t0  UDP *:*
+gitlab-ru   657 virendra.shakya    6u  IPv4 0xcad97ed967dd6277      0t0  TCP 10.0.0.183:50641->35.231.145.151:443 (ESTABLISHED)
+mongod    11173 virendra.shakya    9u  IPv4 0xcad97ed95a0ddbf7      0t0  TCP 127.0.0.1:27017 (LISTEN)
+Google    35595 virendra.shakya   23u  IPv4 0xcad97ed9703558f7      0t0  TCP 10.0.0.183:52160->192.30.253.124:443 (ESTABLISHED)
+Google    35595 virendra.shakya  103u  IPv4 0xcad97ed97c93f277      0t0  TCP 10.0.0.183:52875->192.30.253.125:443 (ESTABLISHED)
+Google    35595 virendra.shakya  114u  IPv4 0xcad97ed95a0deef7      0t0  TCP 10.0.0.183:52171->192.30.253.124:443 (ESTABLISHED)
+Google    35595 virendra.shakya  127u  IPv6 0xcad97ed96d8edaf7      0t0  TCP [2601:645:4001:30d3:185b:47c:a57d:1a0]:53774->[2607:f8b0:4005:808::200e]:443 (ESTABLISHED)
+
+
+
+App Server:
+
+Asynch, non-blocking I/O (scalable):
+    
+
+send message:
+
+- "register", "register-data"
+
+e.g.
+
+REGISTER|fname:Viren|lname:Shakya
+
+(use redis protocol)
+
+
+
+commands supported:
+//for reg-app-server
+- 'register' : creates an account
+- 'unregister' : marks account for deletion
+//for chat-app-server
+- 'send' : send chat message
+- 'offline' : receive all chat messages while user was offline
+
