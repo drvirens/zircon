@@ -54,12 +54,9 @@ zc_server_t *zc_server_new(const char *path)
 
 ZCEXPORT int zc_server_start(zc_server_t *server)
 {
-  //event loop set up
-  if (server->evt_loop_) {
-    server->evt_loop_ = EV_DEFAULT;
-  } else {
-    
-  }
+  
+  zc_assert (server->evt_loop_ == 0);
+  server->evt_loop_ = EV_DEFAULT;
   
   int err = zc_create_socket(server, server->unix_socket_path_);
   if (err == zc_ok)
