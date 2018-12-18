@@ -9,11 +9,7 @@ extern "C"
 #include <stdlib.h>
 #include "zc_utils.h"
 
-    typedef struct tag_zc_client
-    {
-        uint64_t id_;
-        int fd_;
-    } zc_client_t;
+    typedef struct tag_zc_client zc_client_t;
 
     ZCEXPORT zc_client_t *zc_client_new();
 
