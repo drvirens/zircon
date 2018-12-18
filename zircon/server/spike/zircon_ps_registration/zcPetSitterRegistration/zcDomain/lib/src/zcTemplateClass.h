@@ -1,0 +1,14 @@
+//
+// Created by Virendra Shakya on 11/16/18.
+//
+
+#ifndef ZC_PETSITTER_REGISTRATION_ZCTEMPLATECLASS_H
+#define ZC_PETSITTER_REGISTRATION_ZCTEMPLATECLASS_H
+
+
+class zcTemplateClass {
+
+};
+
+
+#endif //ZC_PETSITTER_REGISTRATION_ZCTEMPLATECLASS_H
