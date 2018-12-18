@@ -11,6 +11,7 @@
 #include "zc_log.h"
 #include "zc_alloc.h"
 #include "zc_assert.h"
+#include "zc_client.h"
 
 // ---------------------------------------------------------------------- Private Declarations
 
@@ -145,31 +146,31 @@ int zc_create_socket(zc_server_t *server, const char *path)
   
 #if 0
 
-  for (;;)
-  {
-    int client_fd = accept(server->fd_, 0, 0);
-  if (client_fd == -1) {
-    if (errno == EAGAIN || errno == EWOULDBLOCK) {
-      return -2;
-    }
-  }
-  
-    //todo: do below inside client??
-    //zc_set_socket_non_blocking(client_fd);
-    //zc_enable_tcp_no_delay(client_fd);
-    //zc_enable_keep_alive(client_fd);
-  
-    char buf[256] = {0};
-    ssize_t bytes;
-    while ((bytes = read(client_fd, buf, 255)) > 0)
-    {
-      printf("read [%u] bytes: {%.*s}\n", bytes, bytes, buf);
-    }
-  } //end-for
-
-  close(server->fd_);
-  
+//  for (;;)
+//  {
+//    int client_fd = accept(server->fd_, 0, 0);
+//    if (client_fd == -1) {
+//      if (errno == EAGAIN || errno == EWOULDBLOCK) {
+//        return -2;
+//      }
+//    }
+//
+//    //todo: do below inside client??
+//    //zc_set_socket_non_blocking(client_fd);
+//    //zc_enable_tcp_no_delay(client_fd);
+//    //zc_enable_keep_alive(client_fd);
+//
+//    char buf[256] = {0};
+//    ssize_t bytes;
+//    while ((bytes = read(client_fd, buf, 255)) > 0)
+//    {
+//      printf("read [%u] bytes: {%.*s}\n", bytes, bytes, buf);
+//    }
+//  } //end-for
+//
 #endif
+  
+  close(server->fd_);
 
   LOGV("Looped!", "");
 
@@ -183,7 +184,7 @@ int zc_zero_all_fields(zc_server_t *server)
 
 ZCPRIVATE int zc_set_socket_non_blocking(int fd)
 {
-#if 0
+//#if 0
   int flags;
   flags = fcntl(fd, F_GETFL);
   if (flags < 0) {
@@ -198,8 +199,8 @@ ZCPRIVATE int zc_set_socket_non_blocking(int fd)
     zc_log(zc_log_level_error, "Error occured: %s", err_was);
   }
   return e;
-#endif
-  return 0;
+//#endif
+//  return 0;
 }
 ZCPRIVATE int zc_enable_tcp_no_delay(int fd)
 {
@@ -276,7 +277,8 @@ void recv_socket_cb(struct ev_loop *loop,ev_io *w, int revents)
     ret = recv(w->fd,buf,MAX_BUF_LEN - 1, 0);
     
     if(ret > 0){
-      printf("recv message:\n'%s'\n",buf);
+      printf("recv message:'%s'",buf);
+      printf("\n");
       ev_io_stop(loop,  w);
       ev_io_init(w,write_socket_cb,w->fd,EV_WRITE);
       ev_io_start(loop,w);
