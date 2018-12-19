@@ -33,7 +33,7 @@ ZCPRIVATE int zc_set_socket_non_blocking(int fd);
 ZCPRIVATE int zc_enable_tcp_no_delay(int fd);
 ZCPRIVATE int zc_enable_keep_alive(int fd);
 ZCPRIVATE int zc_enable_reuse_port_address(int fd);
-ZCPRIVATE void __server_accept_cb(EV_P_ ev_io *watcher, int revents);
+ZCPRIVATE void __server_did_accept_client_socket(EV_P_ ev_io *watcher, int revents);
 ZCPRIVATE void recv_socket_cb(struct ev_loop *loop,ev_io *w, int revents);
 ZCPRIVATE void write_socket_cb(struct ev_loop *loop,ev_io *w, int revents);
 
@@ -138,7 +138,7 @@ int zc_create_socket(zc_server_t *server, const char *path)
   LOGV("looping...", "");
   
   
-  ev_io_init(&server->io_, __server_accept_cb, server->fd_, EV_READ);
+  ev_io_init(&server->io_, __server_did_accept_client_socket, server->fd_, EV_READ);
   ev_io_start(server->evt_loop_, &server->io_);
   
   ev_run(server->evt_loop_, 0);
@@ -189,14 +189,14 @@ ZCPRIVATE int zc_set_socket_non_blocking(int fd)
   flags = fcntl(fd, F_GETFL);
   if (flags < 0) {
     char *err_was = strerror(errno);
-    zc_log(zc_log_level_error, "Error occured: %s", err_was);
+    LOGE("Error occured: %s", err_was);
     return -1;
   }
   flags |= O_NONBLOCK;
   int e = fcntl(fd, F_SETFL, flags);
   if (-1 == e) {
     char *err_was = strerror(errno);
-    zc_log(zc_log_level_error, "Error occured: %s", err_was);
+    LOGE("Error occured: %s", err_was);
   }
   return e;
 //#endif
@@ -209,7 +209,7 @@ ZCPRIVATE int zc_enable_tcp_no_delay(int fd)
   int e = setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &val, sizeof(val));
   if (-1 == e) {
     char *err_was = strerror(errno);
-    zc_log(zc_log_level_error, "Error occured: %s", err_was);
+    LOGE("Error occured: %s", err_was);
   }
   return e;
 #endif
@@ -222,7 +222,7 @@ ZCPRIVATE int zc_enable_keep_alive(int fd)
   int e = setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, &oui, sizeof(oui));
   if (-1 == e) {
     char *err_was = strerror(errno);
-    zc_log(zc_log_level_error, "Error occured: %s", err_was);
+    LOGE("Error occured: %s", err_was);
   }
   return e;
 #endif
@@ -235,47 +235,107 @@ ZCPRIVATE int zc_enable_reuse_port_address(int fd)
   int e =  setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, (const char*)&reuse, sizeof(reuse));
   if (e < 0) {
     char *err_was = strerror(errno);
-    zc_log(zc_log_level_error, "Error occured: %s", err_was);
+    LOGE("Error occured: %s", err_was);
   }
 #endif
   return 0;
 }
 
 #pragma mark -- libev callbacks
-void __server_accept_cb(EV_P_ ev_io *io_watcher, int revents) {
-  LOGV("client connected", "");
+//void __server_did_accept_client_socket(EV_P_ ev_io *io_watcher, int revents) {
+//  LOGV("__server_did_accept_client_socket", "");
+//
+//  int fd;
+//  int s = io_watcher->fd;
+//  struct sockaddr_un sin;
+//  socklen_t addrlen = sizeof(struct sockaddr);
+//  do {
+//    fd = accept(s, (struct sockaddr *)&sin, &addrlen);
+//    if(fd > 0) {
+//      break;
+//    }
+//    if(errno == EAGAIN || errno == EWOULDBLOCK) {
+//      continue;
+//    }
+//  } while(1);
+//
+//  zc_client_t *c = zc_client_new(fd);
+//
+//  ev_io* accept_watcher = malloc(sizeof(ev_io));
+//  memset(accept_watcher,0x00,sizeof(ev_io));
+//  ev_io_init(accept_watcher,recv_socket_cb,fd,EV_READ);
+//  ev_io_start(loop,accept_watcher);
+//}
+
+int zc_net_basic_accept(int serversocketfd, struct sockaddr *sa, socklen_t *len) {
+  int fd;
+  while(1) {
+    fd = accept(serversocketfd, sa, len);
+    if (-1 == fd)
+      {
+        if (errno == EINTR) { //sys call interuppted
+          continue;
+        }
+//        else {
+//          //fuck this noise. just fucking return
+//          return fd; //-1
+//        }
+      }
+    break;
+  }
+  return fd;
+}
+int zc_net_unix_accept(int serversocketfd) {
+  int fd;
+  struct sockaddr_un sa;
+  socklen_t slen = sizeof(sa);
+  fd = zc_net_basic_accept(serversocketfd, (struct sockaddr *)&sa, &slen);
+  if (fd == -1) {
+    LOGV("error in zc_net_basic_accept", "");
+  }
+  return fd;
+}
+
+void __server_did_accept_client_socket(EV_P_ ev_io *io_watcher, int revents) {
+  LOGV("__server_did_accept_client_socket", "");
   
+  int ss = io_watcher->fd;
+  int fd = zc_net_unix_accept(ss);
+  if (fd == -1) {
+    LOGV("error in zc_net_unix_accept", "");
+  }
+  
+#if 0
   int fd;
   int s = io_watcher->fd;
   struct sockaddr_un sin;
   socklen_t addrlen = sizeof(struct sockaddr);
-  do{
+  do {
     fd = accept(s, (struct sockaddr *)&sin, &addrlen);
-    if(fd > 0){
+    if(fd > 0) {
       break;
     }
-    if(errno == EAGAIN || errno == EWOULDBLOCK){
+    if(errno == EAGAIN || errno == EWOULDBLOCK) {
       continue;
     }
-  }while(1);
-  
-  ev_io* accept_watcher = malloc(sizeof(ev_io));
-  
-  memset(accept_watcher,0x00,sizeof(ev_io));
-  
-  ev_io_init(accept_watcher,recv_socket_cb,fd,EV_READ);
-  ev_io_start(loop,accept_watcher);
+  } while(1);
+#endif
+//  zc_client_t *c = zc_client_new(fd);
+//
+//  ev_io* accept_watcher = malloc(sizeof(ev_io));
+//  memset(accept_watcher,0x00,sizeof(ev_io));
+//  ev_io_init(accept_watcher,recv_socket_cb,fd,EV_READ);
+//  ev_io_start(loop,accept_watcher);
 }
 
 #define MAX_BUF_LEN  1024
 void recv_socket_cb(struct ev_loop *loop,ev_io *w, int revents)
 {
-  char buf[MAX_BUF_LEN] = {0};
+  char buf[MAX_BUF_LEN];
   int ret = 0;
   
-  do{
+  do {
     ret = recv(w->fd,buf,MAX_BUF_LEN - 1, 0);
-    
     if(ret > 0){
       printf("recv message:'%s'",buf);
       printf("\n");
@@ -294,7 +354,7 @@ void recv_socket_cb(struct ev_loop *loop,ev_io *w, int revents)
       continue;
     }
     break;
-  }while(1);
+  } while(1);
   
   close(w->fd);
   ev_io_stop(loop,w);

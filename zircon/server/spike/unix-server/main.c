@@ -14,7 +14,7 @@ extern int main(int argC, char *argV[])
   zc_log(zc_log_level_verbose, "zc_log_level_verbose %s", "");
   zc_log(zc_log_level_debug, "zc_log_level_debug %s", "");
   zc_log(zc_log_level_warning, "zc_log_level_warning %s", "");
-  zc_log(zc_log_level_error, "zc_log_level_error %s", "");
+  LOGE("zc_log_level_error %s", "");
   zc_log(zc_log_level_fatal, "zc_log_level_fatal %s", "");
   zc_log(zc_log_level_max, "zc_log_level_max %s", "");
 
