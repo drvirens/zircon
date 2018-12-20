@@ -31,6 +31,7 @@ extern "C"
 #define LOGW(expr, ...) zc_log(zc_log_level_warning, (expr), __VA_ARGS__);
 #define LOGE(expr, ...) zc_log(zc_log_level_error, (expr), __VA_ARGS__);
 #define LOGF(expr, ...) zc_log(zc_log_level_fatal, (expr), __VA_ARGS__);
+#define TRACE LOGD("trace here", "")
 
 #ifdef __cplusplus
 }
