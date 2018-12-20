@@ -31,9 +31,9 @@ extern "C"
     ZCEXPORT zc_socket_error_e socket_connect(zc_socket *thiz);
     ZCEXPORT zc_socket_error_e socket_accept(zc_socket *thiz);
 
-    ZCEXPORT zc_socket_error_e socket_config_enable_nonblocking(zc_socket *thiz);
-    ZCEXPORT zc_socket_error_e socket_config_enable_tcpnodelay(zc_socket *thiz);
-    ZCEXPORT zc_socket_error_e socket_config_enable_keepalive(zc_socket *thiz);
+    ZCEXPORT zc_socket_error_e socket_config_enable_nonblocking(zc_socket *thiz, int fd);
+    ZCEXPORT zc_socket_error_e socket_config_enable_tcpnodelay(zc_socket *thiz, int fd);
+    ZCEXPORT zc_socket_error_e socket_config_enable_keepalive(zc_socket *thiz, int fd);
 
     ZCEXPORT const char *socket_error_msg(zc_socket *thiz);
 

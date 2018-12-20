@@ -28,11 +28,11 @@ TEST_CASE("configure socket", "[zc_socket]")
   int fd;
   e = socket_create_unix_socket(s, "/tmp/zircon.sock", &fd);
   REQUIRE(e == zc_socket_err_ok);
-  e = socket_config_enable_nonblocking(s);
+  e = socket_config_enable_nonblocking(s, fd);
   REQUIRE(e == zc_socket_err_ok);
-  e = socket_config_enable_tcpnodelay(s);
+  e = socket_config_enable_tcpnodelay(s, fd);
   REQUIRE(e == zc_socket_err_ok);
-  e = socket_config_enable_keepalive(s);
+  e = socket_config_enable_keepalive(s, fd);
   REQUIRE(e == zc_socket_err_ok);
 
   delete_instance(s);

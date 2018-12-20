@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
 
 #include "zc_socket.h"
 #include "zc_log.h"
@@ -93,25 +95,77 @@ ZCEXPORT zc_socket_error_e socket_create_unix_socket(zc_socket *thiz, const char
 
   return e;
 }
-ZCEXPORT zc_socket_error_e socket_config_enable_nonblocking(zc_socket *thiz)
+
+ZCPRIVATE int zc_enable_reuse_port_address(int fd)
+{
+
+  int reuse = 1;
+  int e = setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, (const char *)&reuse, sizeof(reuse));
+  if (e < 0)
+  {
+    char *err_was = strerror(errno);
+    LOGE("Error occured: %s", err_was);
+  }
+
+  return 0;
+}
+
+ZCEXPORT zc_socket_error_e socket_config_enable_nonblocking(zc_socket *thiz, int fd)
 {
   TRACE
   PRECONDITION(thiz);
   zc_socket_error_e e = zc_socket_err_failed;
+
+  int flags;
+  flags = fcntl(fd, F_GETFL);
+  if (flags < 0)
+  {
+    char *err_was = strerror(errno);
+    LOGE("Error occured: %s", err_was);
+    return e;
+  }
+  flags |= O_NONBLOCK;
+  int err = fcntl(fd, F_SETFL, flags);
+  if (-1 == err)
+  {
+    char *err_was = strerror(errno);
+    LOGE("Error occured: %s", err_was);
+    return e;
+  }
+  e = zc_socket_err_ok;
   return e;
 }
-ZCEXPORT zc_socket_error_e socket_config_enable_tcpnodelay(zc_socket *thiz)
+ZCEXPORT zc_socket_error_e socket_config_enable_tcpnodelay(zc_socket *thiz, int fd)
 {
   TRACE
   PRECONDITION(thiz);
   zc_socket_error_e e = zc_socket_err_failed;
+
+  int val;
+  int err = setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &val, sizeof(val));
+  if (-1 == err)
+  {
+    char *err_was = strerror(errno);
+    LOGE("Error occured: %s", err_was);
+    return e;
+  }
+  e = zc_socket_err_ok;
   return e;
 }
-ZCEXPORT zc_socket_error_e socket_config_enable_keepalive(zc_socket *thiz)
+ZCEXPORT zc_socket_error_e socket_config_enable_keepalive(zc_socket *thiz, int fd)
 {
   TRACE
   PRECONDITION(thiz);
   zc_socket_error_e e = zc_socket_err_failed;
+  int oui = 1;
+  int err = setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, &oui, sizeof(oui));
+  if (-1 == err)
+  {
+    char *err_was = strerror(errno);
+    LOGE("Error occured: %s", err_was);
+    return e;
+  }
+  e = zc_socket_err_ok;
   return e;
 }
 ZCEXPORT zc_socket_error_e socket_bind_and_listen(zc_socket *thiz)
@@ -138,7 +192,6 @@ ZCEXPORT zc_socket_error_e socket_accept(zc_socket *thiz)
 ZCEXPORT const char *socket_error_msg(zc_socket *thiz)
 {
   TRACE
-  PRECONDITION(thiz);
   char *err_was = strerror(errno);
   return (const char *)err_was;
 }
