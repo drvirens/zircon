@@ -3,6 +3,6 @@
 
 TEST_CASE("server test", "[zc_server]")
 {
-  zc_server_t* server = zc_server_new(ZC_DEFAULT_SOCKET_PATH);
+  zc_server_t* server = zc_server_new("/tmp/deleteanytime");
   REQUIRE(server != 0);
 }

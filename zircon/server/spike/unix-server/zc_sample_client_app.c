@@ -5,8 +5,8 @@
 #include <sys/un.h>
 #include <unistd.h>
 
-char* socket_path = "/tmp/virendra";
-// char *socket_path = "\0hidden";
+#define ZC_DEFAULT_SOCKET_PATH "/tmp/virendshakya"
+char* socket_path = ZC_DEFAULT_SOCKET_PATH;
 
 int main(int argc, char* argv[])
 {
