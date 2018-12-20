@@ -9,7 +9,7 @@
 #include "zc_assert.h"
 #include "zc_client.h"
 #include "zc_log.h"
-#include "zc_socket_t.h"
+#include "zc_socket.h"
 
 // ----------------------------------------------------------------------
 // Private Declarations
@@ -21,7 +21,7 @@ struct tag_server {
   ev_io io_;
   struct ev_loop* evt_loop_;
   
-  
+  zc_socket_t* socket_;
 };
 
 // SOMAXCONN = 128
@@ -78,60 +78,23 @@ int zc_create_socket(zc_server_t* server, const char* path)
 {
   int err = zc_socket_error;
 
-  //
-  // ------------------------- socket
-  //
-  server->fd_ = socket(AF_UNIX, SOCK_STREAM, 0);
-  if (server->fd_ < 0) {
-    LOGV("could not create unix socket ", "");
+  server->socket_ = new_zc_socket(zc_socket_type_unix);
+  
+  zc_socket_error_e e;
+  e = socket_create_unix_socket(server->socket_, "/tmp/zircon.sock", &(server->fd_));
+  
+  e =  socket_set_nonblocking(server->socket_, server->fd_);
+  //e =  socket_set_tcpnodelay(server->socket_, server->fd_);
+  e =  socket_set_keepalive(server->socket_, server->fd_);
+  
+  e = socket_bind_and_listen(server->socket_, server->fd_, &(server->addr_), ZC_SERVER_BACKLOG);
+  if (e != zc_socket_err_ok) {
+    LOGV("couldnot bind", "");
     return err;
   }
-
-  zc_set_socket_non_blocking(server->fd_);
-  zc_enable_tcp_no_delay(server->fd_);
-  zc_enable_keep_alive(server->fd_);
-#if defined DEBUG
-  zc_enable_reuse_port_address(server->fd_);
-#endif
-
-  memset(&server->addr_, 0, sizeof(struct sockaddr_un));
-  server->addr_.sun_family = AF_UNIX;
-  strncpy(server->addr_.sun_path, path, sizeof(server->addr_.sun_path) - 1);
-
-  //
-  // ------------------------- access
-  //
-  // do we hace access to this path?
-  err = access(server->addr_.sun_path, F_OK);
-  if (0 == err) {
-    LOGV("fock. error. bogus path cant access.", "");
-    unlink(server->addr_.sun_path);
-    return -1;
-  }
-
-  //
-  // ------------------------- bind
-  //
-  err = bind(server->fd_, (struct sockaddr*)&server->addr_,
-      sizeof(struct sockaddr_un));
-  if (err < 0) {
-    char* err_was = strerror(errno);
-    LOGE("Error occured: %s", err_was);
-    unlink(server->addr_.sun_path);
-    return -1;
-  }
-
-  //
-  // ------------------------- listen
-  //
-  err = listen(server->fd_, ZC_SERVER_BACKLOG);
-  if (err < 0) {
-    char* err_was = strerror(errno);
-    LOGE("Error occured: %s", err_was);
-    unlink(server->addr_.sun_path);
-    return -1;
-  }
-
+  
+  
+  
   LOGV("looping...", "");
 
   ev_io_init(&server->io_, __server_did_accept_client_socket, server->fd_,
@@ -215,32 +178,6 @@ ZC_PRIVATE int zc_enable_reuse_port_address(int fd)
 }
 
 #pragma mark-- libev callbacks
-// void __server_did_accept_client_socket(EV_P_ ev_io *io_watcher, int revents)
-// {
-//  LOGV("__server_did_accept_client_socket", "");
-//
-//  int fd;
-//  int s = io_watcher->fd;
-//  struct sockaddr_un sin;
-//  socklen_t addrlen = sizeof(struct sockaddr);
-//  do {
-//    fd = accept(s, (struct sockaddr *)&sin, &addrlen);
-//    if(fd > 0) {
-//      break;
-//    }
-//    if(errno == EAGAIN || errno == EWOULDBLOCK) {
-//      continue;
-//    }
-//  } while(1);
-//
-//  zc_client_t *c = zc_client_new(fd);
-//
-//  ev_io* accept_watcher = malloc(sizeof(ev_io));
-//  memset(accept_watcher,0x00,sizeof(ev_io));
-//  ev_io_init(accept_watcher,recv_socket_cb,fd,EV_READ);
-//  ev_io_start(loop,accept_watcher);
-//}
-
 int zc_net_basic_accept(int serversocketfd, struct sockaddr* sa,
     socklen_t* len)
 {

@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "zc_socket_t.h"
+#include "zc_socket.h"
 #include "zc_alloc.h"
 #include "zc_assert.h"
 #include "zc_global_constants.h"
@@ -251,7 +251,6 @@ ZC_PRIVATE zc_socket_error_e __pri_unix_bind_and_listen(zc_socket_t* thiz, int f
 
 ZC_PRIVATE int __pri_basic_accept(int serversocketfd, struct sockaddr* sa, socklen_t* len)
 {
-  zc_socket_error_e e = zc_socket_err_failed;
   int fd;
   while (1) {
     fd = zc_net_accept(serversocketfd, sa, len);

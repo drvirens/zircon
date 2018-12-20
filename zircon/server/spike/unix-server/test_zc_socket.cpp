@@ -8,7 +8,7 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 
-#include "zc_socket_t.h"
+#include "zc_socket.h"
 
 TEST_CASE("create socket", "[zc_socket_t]")
 {

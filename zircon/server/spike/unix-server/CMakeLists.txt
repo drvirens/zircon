@@ -9,7 +9,7 @@ set(ZC_SAMPLE_CLIENT_NAME client)
 set(ZC_TEST_NAME test)
 
 
-set(ZC_USE_MOCK_BIND ON)
+set(ZC_USE_MOCK_BIND OFF)
 
 
 
@@ -83,8 +83,8 @@ target_link_libraries(${ZC_LIB_NAME}
 
 add_executable(${ZC_SERVER_NAME} "")
 
-if (ZC_USE_MOCK_BIND)
-  add_definitions(-DUSE_MOCK_BIND=1)
+if (${ZC_USE_MOCK_BIND})
+  add_definitions(-DUSE_MOCK_BIND=0)
 else ()
   add_definitions(-DUSE_MOCK_BIND=0)
 endif()
