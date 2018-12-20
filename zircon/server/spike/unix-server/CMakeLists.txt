@@ -9,6 +9,9 @@ set(ZC_SAMPLE_CLIENT_NAME client)
 set(ZC_TEST_NAME test)
 
 
+set(ZC_USE_MOCK_BIND ON)
+
+
 
 # ---------------------------------------------------------------
 #
@@ -79,7 +82,13 @@ target_link_libraries(${ZC_LIB_NAME}
 # ---------------------------------------------------------------
 
 add_executable(${ZC_SERVER_NAME} "")
-add_definitions(-DUSE_MOCK_BIND=0)
+
+if (ZC_USE_MOCK_BIND)
+  add_definitions(-DUSE_MOCK_BIND=1)
+else ()
+  add_definitions(-DUSE_MOCK_BIND=0)
+endif()
+
 target_sources(${ZC_SERVER_NAME}
     PUBLIC
         "main.c"
@@ -143,7 +152,14 @@ target_link_libraries(${ZC_SAMPLE_CLIENT_NAME} ${ZC_LIB_NAME})
 #
 # ---------------------------------------------------------------
 add_executable(${ZC_TEST_NAME} "")
-#add_definitions(-DUSE_MOCK_BIND=1)
+
+
+if (ZC_USE_MOCK_BIND)
+  add_definitions(-DUSE_MOCK_BIND=1)
+else ()
+  add_definitions(-DUSE_MOCK_BIND=0)
+endif()
+
 target_sources(${ZC_TEST_NAME}
     PRIVATE
         "test_zc_server.cpp"
