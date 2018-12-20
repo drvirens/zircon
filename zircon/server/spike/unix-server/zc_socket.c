@@ -209,7 +209,7 @@ ZC_PRIVATE zc_socket_error_e __pri_unix_bind_and_listen(zc_socket_t* thiz, int f
   zc_socket_error_e e = zc_socket_err_failed;
 
   memset(sa, 0, sizeof(struct sockaddr_un));
-  sa->sun_family = AF_LOCAL;
+  sa->sun_family = AF_UNIX;
   strncpy(sa->sun_path, thiz->unix_socket_path_, sizeof(sa->sun_path) - 1);
 
   //
@@ -257,9 +257,10 @@ ZC_PRIVATE int __pri_basic_accept(int serversocketfd, struct sockaddr* sa, sockl
     if (-1 == fd) {
       if (errno == EINTR) { // sys call interuppted
         continue;
-      } else {
-        return fd; //-1
       }
+      //else {
+      //  return fd; //-1
+      //}
     }
     break;
   }
