@@ -1,18 +1,15 @@
 #include <errno.h>
 #include <ev.h>
-#include <fcntl.h>
 #include <memory.h>
 #include <stdio.h>
 #include <string.h>
-#include <sys/socket.h>
-#include <sys/un.h>
-#include <unistd.h>
 
+#include "zc_server.h"
 #include "zc_alloc.h"
 #include "zc_assert.h"
 #include "zc_client.h"
 #include "zc_log.h"
-#include "zc_server.h"
+#include "zc_socket_t.h"
 
 // ----------------------------------------------------------------------
 // Private Declarations
@@ -23,6 +20,8 @@ struct tag_server {
   char* unix_socket_path_;
   ev_io io_;
   struct ev_loop* evt_loop_;
+  
+  
 };
 
 // SOMAXCONN = 128
