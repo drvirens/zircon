@@ -79,6 +79,7 @@ target_link_libraries(${ZC_LIB_NAME}
 # ---------------------------------------------------------------
 
 add_executable(${ZC_SERVER_NAME} "")
+add_definitions(-DUSE_MOCK_BIND=0)
 target_sources(${ZC_SERVER_NAME}
     PUBLIC
         "main.c"
@@ -142,6 +143,7 @@ target_link_libraries(${ZC_SAMPLE_CLIENT_NAME} ${ZC_LIB_NAME})
 #
 # ---------------------------------------------------------------
 add_executable(${ZC_TEST_NAME} "")
+#add_definitions(-DUSE_MOCK_BIND=1)
 target_sources(${ZC_TEST_NAME}
     PRIVATE
         "test_zc_server.cpp"

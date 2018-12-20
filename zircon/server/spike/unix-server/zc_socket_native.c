@@ -1,6 +1,6 @@
 #include "zc_socket_native.h"
 #include "zc_log.h"
-#define USE_MOCK_BIND 1
+
 ZC_PUBLIC int zc_net_socket(int domain, int type, int protocol)
 {
   TRACE
