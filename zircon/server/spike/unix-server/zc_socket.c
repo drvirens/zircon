@@ -6,12 +6,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
-#include <ev.h>
 
 #include "zc_socket.h"
 #include "zc_log.h"
 #include "zc_alloc.h"
 #include "zc_assert.h"
+#include "zc_assert.h"
+#include "zc_global_constants.h"
 
 // ---------------------------------------------------------------------- Private Declarations
 
@@ -19,9 +20,7 @@ struct tag_zc_socket
 {
   int fd_;
   struct sockaddr_un addr_;
-  char *unix_socket_path_;
-  ev_io io_;
-  struct ev_loop *evt_loop_;
+  char unix_socket_path_[k_global_path_len];
 };
 
 // ---------------------------------------------------------------------- Private Function Prototypes
@@ -37,7 +36,11 @@ ZCEXPORT zc_socket *new_instance()
   }
   return obj;
 }
-ZCEXPORT zc_socket_error_e socket_create_unix_socket(zc_socket *thiz)
+ZCEXPORT void delete_instance(zc_socket *thiz){TRACE
+
+}
+
+ZCEXPORT zc_socket_error_e socket_create_unix_socket(zc_socket *thiz, const char *local_path)
 {
   TRACE
   zc_socket_error_e e = zc_socket_err_failed;
