@@ -15,10 +15,10 @@
 #include "zc_log.h"
 #include "zc_socket.h"
 
-#define PRECONDITION(thiz_ptr)                                                 \
-  zc_assert_not_null((thiz_ptr));                                              \
-  if (!(thiz_ptr)) {                                                           \
-    return zc_socket_err_failed;                                               \
+#define PRECONDITION(thiz_ptr)    \
+  zc_assert_not_null((thiz_ptr)); \
+  if (!(thiz_ptr)) {              \
+    return zc_socket_err_failed;  \
   }
 
 // ----------------------------------------------------------------------
@@ -33,14 +33,15 @@ struct tag_zc_socket {
 
 // ----------------------------------------------------------------------
 // Private Function Prototypes
-ZCPRIVATE void __pri_common_init(zc_socket *thiz);
+ZC_PRIVATE void __pri_common_init(zc_socket* thiz);
 
 // ---------------------------------------------------------------------- Public
 // API
 
-ZCEXPORT zc_socket *new_zc_socket(zc_socket_type type) {
+ZC_PUBLIC zc_socket* new_zc_socket(zc_socket_type type)
+{
   TRACE
-  zc_socket *obj = (zc_socket *)zc_malloc(sizeof(zc_socket));
+  zc_socket* obj = (zc_socket*)zc_malloc(sizeof(zc_socket));
   if (obj) {
     memset(obj, 0, sizeof(zc_socket));
     obj->type_ = type;
@@ -49,16 +50,18 @@ ZCEXPORT zc_socket *new_zc_socket(zc_socket_type type) {
   return obj;
 }
 
-ZCEXPORT void delete_instance(zc_socket *thiz) {
+ZC_PUBLIC void delete_instance(zc_socket* thiz)
+{
   TRACE
   if (thiz) {
     zc_free(thiz);
   }
 }
 
-ZCEXPORT zc_socket_error_e socket_create_unix_socket(zc_socket *thiz,
-                                                     const char *local_path,
-                                                     int *fd) {
+ZC_PUBLIC zc_socket_error_e socket_create_unix_socket(zc_socket* thiz,
+    const char* local_path,
+    int* fd)
+{
   TRACE
   PRECONDITION(thiz);
   zc_socket_error_e e = zc_socket_err_failed;
@@ -93,17 +96,18 @@ ZCEXPORT zc_socket_error_e socket_create_unix_socket(zc_socket *thiz,
   return e;
 }
 
-ZCEXPORT zc_socket_error_e
-socket_config_enable_reuseportaddress(zc_socket *thiz, int fd) {
+ZC_PUBLIC zc_socket_error_e
+socket_set_reuseportaddress(zc_socket* thiz, int fd)
+{
   TRACE
   PRECONDITION(thiz);
   zc_socket_error_e e = zc_socket_err_failed;
 
   int reuse = 1;
-  int err = setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, (const char *)&reuse,
-                       sizeof(reuse));
+  int err = setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, (const char*)&reuse,
+      sizeof(reuse));
   if (err < 0) {
-    char *err_was = strerror(errno);
+    char* err_was = strerror(errno);
     LOGE("Error occured: %s", err_was);
     return e;
   }
@@ -111,8 +115,9 @@ socket_config_enable_reuseportaddress(zc_socket *thiz, int fd) {
   return 0;
 }
 
-ZCEXPORT zc_socket_error_e socket_config_enable_nonblocking(zc_socket *thiz,
-                                                            int fd) {
+ZC_PUBLIC zc_socket_error_e socket_set_nonblocking(zc_socket* thiz,
+    int fd)
+{
   TRACE
   PRECONDITION(thiz);
   zc_socket_error_e e = zc_socket_err_failed;
@@ -120,22 +125,23 @@ ZCEXPORT zc_socket_error_e socket_config_enable_nonblocking(zc_socket *thiz,
   int flags;
   flags = fcntl(fd, F_GETFL);
   if (flags < 0) {
-    char *err_was = strerror(errno);
+    char* err_was = strerror(errno);
     LOGE("Error occured: %s", err_was);
     return e;
   }
   flags |= O_NONBLOCK;
   int err = fcntl(fd, F_SETFL, flags);
   if (-1 == err) {
-    char *err_was = strerror(errno);
+    char* err_was = strerror(errno);
     LOGE("Error occured: %s", err_was);
     return e;
   }
   e = zc_socket_err_ok;
   return e;
 }
-ZCEXPORT zc_socket_error_e socket_config_enable_tcpnodelay(zc_socket *thiz,
-                                                           int fd) {
+ZC_PUBLIC zc_socket_error_e socket_set_tcpnodelay(zc_socket* thiz,
+    int fd)
+{
   TRACE
   PRECONDITION(thiz);
   zc_socket_error_e e = zc_socket_err_failed;
@@ -143,57 +149,63 @@ ZCEXPORT zc_socket_error_e socket_config_enable_tcpnodelay(zc_socket *thiz,
   int val;
   int err = setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &val, sizeof(val));
   if (-1 == err) {
-    char *err_was = strerror(errno);
+    char* err_was = strerror(errno);
     LOGE("Error occured: %s", err_was);
     return e;
   }
   e = zc_socket_err_ok;
   return e;
 }
-ZCEXPORT zc_socket_error_e socket_config_enable_keepalive(zc_socket *thiz,
-                                                          int fd) {
+ZC_PUBLIC zc_socket_error_e socket_set_keepalive(zc_socket* thiz,
+    int fd)
+{
   TRACE
   PRECONDITION(thiz);
   zc_socket_error_e e = zc_socket_err_failed;
   int oui = 1;
   int err = setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, &oui, sizeof(oui));
   if (-1 == err) {
-    char *err_was = strerror(errno);
+    char* err_was = strerror(errno);
     LOGE("Error occured: %s", err_was);
     return e;
   }
   e = zc_socket_err_ok;
   return e;
 }
-ZCEXPORT zc_socket_error_e socket_bind_and_listen(zc_socket *thiz, int fd) {
+ZC_PUBLIC zc_socket_error_e socket_bind_and_listen(zc_socket* thiz, int fd)
+{
   TRACE
   PRECONDITION(thiz);
   zc_socket_error_e e = zc_socket_err_failed;
   return e;
 }
-ZCEXPORT zc_socket_error_e socket_connect(zc_socket *thiz, int fd) {
+ZC_PUBLIC zc_socket_error_e socket_connect(zc_socket* thiz, int fd)
+{
   TRACE
   PRECONDITION(thiz);
   zc_socket_error_e e = zc_socket_err_failed;
   return e;
 }
-ZCEXPORT zc_socket_error_e socket_accept(zc_socket *thiz, int fd) {
+ZC_PUBLIC zc_socket_error_e socket_accept(zc_socket* thiz, int fd)
+{
   TRACE
   PRECONDITION(thiz);
   zc_socket_error_e e = zc_socket_err_failed;
   return e;
 }
-ZCEXPORT const char *socket_error_msg(zc_socket *thiz) {
+ZC_PUBLIC const char* socket_error_msg(zc_socket* thiz)
+{
   TRACE
-  char *err_was = strerror(errno);
-  return (const char *)err_was;
+  char* err_was = strerror(errno);
+  return (const char*)err_was;
 }
 
 #pragma mark - Private
-ZCPRIVATE void __pri_common_init(zc_socket *thiz){TRACE}
+ZC_PRIVATE void __pri_common_init(zc_socket* thiz){ TRACE }
 
-ZCPRIVATE int __pri_unix_bind_and_listen(zc_socket *thiz, int fd,
-                                         struct sockaddr_un *sa, int backlog) {
+ZC_PRIVATE int __pri_unix_bind_and_listen(zc_socket* thiz, int fd,
+    struct sockaddr_un* sa, int backlog)
+{
   TRACE
   zc_socket_error_e err = zc_socket_err_failed;
 
@@ -215,9 +227,9 @@ ZCPRIVATE int __pri_unix_bind_and_listen(zc_socket *thiz, int fd,
   //
   // ------------------------- bind
   //
-  err = bind(fd, (struct sockaddr *)sa, sizeof(struct sockaddr_un));
+  err = bind(fd, (struct sockaddr*)sa, sizeof(struct sockaddr_un));
   if (err < 0) {
-    char *err_was = strerror(errno);
+    char* err_was = strerror(errno);
     LOGE("Error occured: %s", err_was);
     unlink(sa->sun_path);
     return -1;
@@ -228,7 +240,7 @@ ZCPRIVATE int __pri_unix_bind_and_listen(zc_socket *thiz, int fd,
   //
   err = listen(fd, backlog);
   if (err < 0) {
-    char *err_was = strerror(errno);
+    char* err_was = strerror(errno);
     LOGE("Error occured: %s", err_was);
     unlink(sa->sun_path);
     return -1;

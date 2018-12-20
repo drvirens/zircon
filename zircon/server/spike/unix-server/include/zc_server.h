@@ -11,12 +11,13 @@ extern "C" {
 
 #define ZC_DEFAULT_SOCKET_PATH "/tmp/virendra"
 
-typedef enum tag_error_type { zc_ok, zc_socket_error } zc_error_type_e;
+typedef enum tag_error_type { zc_ok,
+  zc_socket_error } zc_error_type_e;
 
 typedef struct tag_server zc_server_t;
 
-ZCEXPORT zc_server_t *zc_server_new(const char *path);
-ZCEXPORT int zc_server_start(zc_server_t *server);
+ZC_PUBLIC zc_server_t* zc_server_new(const char* path);
+ZC_PUBLIC int zc_server_start(zc_server_t* server);
 
 #ifdef __cplusplus
 }

@@ -8,8 +8,8 @@ extern "C" {
 #include "zc_utils.h"
 #include <stdlib.h>
 
-ZCEXPORT void *zc_malloc(size_t size);
-ZCEXPORT void zc_free(void *ptr);
+ZC_PUBLIC void* zc_malloc(size_t size);
+ZC_PUBLIC void zc_free(void* ptr);
 
 #ifdef __cplusplus
 }

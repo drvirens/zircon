@@ -20,26 +20,21 @@ typedef enum tag_enum_socket_type {
 
 typedef struct tag_zc_socket zc_socket;
 
-ZCEXPORT zc_socket *new_zc_socket(zc_socket_type type);
-ZCEXPORT void delete_instance(zc_socket *thiz);
+ZC_PUBLIC zc_socket* new_zc_socket(zc_socket_type type);
+ZC_PUBLIC void delete_instance(zc_socket* thiz);
 
-ZCEXPORT zc_socket_error_e socket_create_unix_socket(zc_socket *thiz,
-                                                     const char *local_path,
-                                                     int *fd);
-ZCEXPORT zc_socket_error_e socket_bind_and_listen(zc_socket *thiz, int fd);
-ZCEXPORT zc_socket_error_e socket_connect(zc_socket *thiz, int fd);
-ZCEXPORT zc_socket_error_e socket_accept(zc_socket *thiz, int fd);
+ZC_PUBLIC zc_socket_error_e socket_create_unix_socket(zc_socket* thiz, const char* local_path, int* fd);
+ZC_PUBLIC zc_socket_error_e socket_bind_and_listen(zc_socket* thiz, int fd);
+ZC_PUBLIC zc_socket_error_e socket_connect(zc_socket* thiz, int fd);
+ZC_PUBLIC zc_socket_error_e socket_accept(zc_socket* thiz, int fd);
 
-ZCEXPORT zc_socket_error_e socket_config_enable_nonblocking(zc_socket *thiz,
-                                                            int fd);
-ZCEXPORT zc_socket_error_e socket_config_enable_tcpnodelay(zc_socket *thiz,
-                                                           int fd);
-ZCEXPORT zc_socket_error_e socket_config_enable_keepalive(zc_socket *thiz,
-                                                          int fd);
-ZCEXPORT zc_socket_error_e
-socket_config_enable_reuseportaddress(zc_socket *thiz, int fd);
+ZC_PUBLIC zc_socket_error_e socket_set_nonblocking(zc_socket* thiz, int fd);
+ZC_PUBLIC zc_socket_error_e socket_set_tcpnodelay(zc_socket* thiz, int fd);
+ZC_PUBLIC zc_socket_error_e socket_set_keepalive(zc_socket* thiz, int fd);
+ZC_PUBLIC zc_socket_error_e
+socket_set_reuseportaddress(zc_socket* thiz, int fd);
 
-ZCEXPORT const char *socket_error_msg(zc_socket *thiz);
+ZC_PUBLIC const char* socket_error_msg(zc_socket* thiz);
 
 #if defined __cplusplus
 }

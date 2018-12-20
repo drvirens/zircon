@@ -6,8 +6,8 @@ extern "C" {
 #endif
 
 // syntax
-#define ZCEXPORT extern
-#define ZCPRIVATE static
+#define ZC_PUBLIC extern
+#define ZC_PRIVATE static
 
 // todos
 #define TODO(expr)

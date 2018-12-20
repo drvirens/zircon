@@ -12,23 +12,24 @@
 // ----------------------------------------------------------------------
 // Private Struct Declarations
 typedef struct tag_log {
-  FILE *fp_;
+  FILE* fp_;
   zc_log_level_e level_;
-  char *logfile_;
+  char* logfile_;
 } zc_log_t;
 
 // ----------------------------------------------------------------------
 // Private Functions Declarations
-ZCPRIVATE void zc_log_msg(int level, const char *msg);
+ZC_PRIVATE void zc_log_msg(int level, const char* msg);
 
 // ----------------------------------------------------------------------
 // Private Data Members
-ZCPRIVATE zc_log_t g_log = {0};
+ZC_PRIVATE zc_log_t g_log = { 0 };
 
 // ---------------------------------------------------------------------- Public
 // Functions
-ZCEXPORT void zc_log_init() { g_log.logfile_ = ""; }
-ZCEXPORT void zc_log(int level, const char *fmt, ...) {
+ZC_PUBLIC void zc_log_init() { g_log.logfile_ = ""; }
+ZC_PUBLIC void zc_log(int level, const char* fmt, ...)
+{
 
   va_list arg_list;
   char msg[ZC_MAX_LOG_MSG_LEN];
@@ -44,16 +45,17 @@ ZCEXPORT void zc_log(int level, const char *fmt, ...) {
   zc_log_msg(level, msg);
 }
 
-ZCEXPORT void zc_set_log_level(int level) { g_log.level_ = level; }
+ZC_PUBLIC void zc_set_log_level(int level) { g_log.level_ = level; }
 
 // ----------------------------------------------------------------------
 // Private Functions
-ZCPRIVATE void zc_log_msg(int level, const char *msg) {
+ZC_PRIVATE void zc_log_msg(int level, const char* msg)
+{
   if (0 == g_log.logfile_) {
     g_log.logfile_ = "";
   }
   int log_to_stdout = g_log.logfile_[0] == '\0';
-  FILE *fp;
+  FILE* fp;
 
   if (log_to_stdout) {
     fp = stdout;
@@ -75,24 +77,24 @@ ZCPRIVATE void zc_log_msg(int level, const char *msg) {
   pid_t pid = getpid();
 
   gettimeofday(&tv, NULL);
-  struct tm *tm;
+  struct tm* tm;
   time_t rawtime;
   time(&rawtime);
   tm = localtime(&rawtime);
-  char *gottime = asctime(tm);
+  char* gottime = asctime(tm);
 
-  char processedtime[64] = {0};
+  char processedtime[64] = { 0 };
   if (gottime) {
-    char *start = gottime;
-    char *curr = start;
+    char* start = gottime;
+    char* curr = start;
     int i = 0;
     while (*curr != '\n') {
       processedtime[i++] = *curr++;
     }
 
-    static const char *icon = "VDWEF";
+    static const char* icon = "VDWEF";
     fprintf(fp, "%d:%c %s %c %s\n", (int)pid, 'S', processedtime, icon[level],
-            msg);
+        msg);
   }
 
   if (!log_to_stdout && fp) {

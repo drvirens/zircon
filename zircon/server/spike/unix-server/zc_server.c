@@ -20,35 +20,36 @@
 struct tag_server {
   int fd_;
   struct sockaddr_un addr_;
-  char *unix_socket_path_;
+  char* unix_socket_path_;
   ev_io io_;
-  struct ev_loop *evt_loop_;
+  struct ev_loop* evt_loop_;
 };
 
 // SOMAXCONN = 128
 #define ZC_SERVER_BACKLOG 100
 
-ZCPRIVATE int zc_create_socket(zc_server_t *server, const char *path);
-ZCPRIVATE int zc_zero_all_fields(zc_server_t *server);
-ZCPRIVATE int zc_set_socket_non_blocking(int fd);
-ZCPRIVATE int zc_enable_tcp_no_delay(int fd);
-ZCPRIVATE int zc_enable_keep_alive(int fd);
-ZCPRIVATE int zc_enable_reuse_port_address(int fd);
-ZCPRIVATE void __server_did_accept_client_socket(EV_P_ ev_io *watcher,
-                                                 int revents);
-ZCPRIVATE void recv_socket_cb(struct ev_loop *loop, ev_io *w, int revents);
-ZCPRIVATE void write_socket_cb(struct ev_loop *loop, ev_io *w, int revents);
+ZC_PRIVATE int zc_create_socket(zc_server_t* server, const char* path);
+ZC_PRIVATE int zc_zero_all_fields(zc_server_t* server);
+ZC_PRIVATE int zc_set_socket_non_blocking(int fd);
+ZC_PRIVATE int zc_enable_tcp_no_delay(int fd);
+ZC_PRIVATE int zc_enable_keep_alive(int fd);
+ZC_PRIVATE int zc_enable_reuse_port_address(int fd);
+ZC_PRIVATE void __server_did_accept_client_socket(EV_P_ ev_io* watcher,
+    int revents);
+ZC_PRIVATE void recv_socket_cb(struct ev_loop* loop, ev_io* w, int revents);
+ZC_PRIVATE void write_socket_cb(struct ev_loop* loop, ev_io* w, int revents);
 
 // ---------------------------------------------------------------------- Public
 // Impl
 static zc_server_t g_server;
-zc_server_t *zc_server_new(const char *path) {
+zc_server_t* zc_server_new(const char* path)
+{
   zc_log(zc_log_level_verbose, "this is the fmt specificer %s",
-         "whoattttt-zc_server_new");
-  zc_server_t *s = &g_server;
+      "whoattttt-zc_server_new");
+  zc_server_t* s = &g_server;
   zc_zero_all_fields(s);
   if (path && path[0] != '\0') {
-    char *b = (char *)zc_malloc(strlen(path));
+    char* b = (char*)zc_malloc(strlen(path));
     if (b) {
       strcpy(b, path);
     }
@@ -58,7 +59,8 @@ zc_server_t *zc_server_new(const char *path) {
   return s;
 }
 
-ZCEXPORT int zc_server_start(zc_server_t *server) {
+ZC_PUBLIC int zc_server_start(zc_server_t* server)
+{
   zc_assert_null((server->evt_loop_)); // not null whoa
   server->evt_loop_ = EV_DEFAULT;
 
@@ -73,7 +75,8 @@ ZCEXPORT int zc_server_start(zc_server_t *server) {
 
 // ----------------------------------------------------------------------
 // Private Impl
-int zc_create_socket(zc_server_t *server, const char *path) {
+int zc_create_socket(zc_server_t* server, const char* path)
+{
   int err = zc_socket_error;
 
   //
@@ -110,10 +113,10 @@ int zc_create_socket(zc_server_t *server, const char *path) {
   //
   // ------------------------- bind
   //
-  err = bind(server->fd_, (struct sockaddr *)&server->addr_,
-             sizeof(struct sockaddr_un));
+  err = bind(server->fd_, (struct sockaddr*)&server->addr_,
+      sizeof(struct sockaddr_un));
   if (err < 0) {
-    char *err_was = strerror(errno);
+    char* err_was = strerror(errno);
     LOGE("Error occured: %s", err_was);
     unlink(server->addr_.sun_path);
     return -1;
@@ -124,7 +127,7 @@ int zc_create_socket(zc_server_t *server, const char *path) {
   //
   err = listen(server->fd_, ZC_SERVER_BACKLOG);
   if (err < 0) {
-    char *err_was = strerror(errno);
+    char* err_was = strerror(errno);
     LOGE("Error occured: %s", err_was);
     unlink(server->addr_.sun_path);
     return -1;
@@ -133,7 +136,7 @@ int zc_create_socket(zc_server_t *server, const char *path) {
   LOGV("looping...", "");
 
   ev_io_init(&server->io_, __server_did_accept_client_socket, server->fd_,
-             EV_READ);
+      EV_READ);
   ev_io_start(server->evt_loop_, &server->io_);
 
   ev_run(server->evt_loop_, 0);
@@ -147,31 +150,34 @@ int zc_create_socket(zc_server_t *server, const char *path) {
 
   return zc_ok;
 }
-int zc_zero_all_fields(zc_server_t *server) {
+int zc_zero_all_fields(zc_server_t* server)
+{
   memset(server, 0, sizeof(zc_server_t));
   return zc_ok;
 }
 
-ZCPRIVATE int zc_set_socket_non_blocking(int fd) {
+ZC_PRIVATE int zc_set_socket_non_blocking(int fd)
+{
   //#if 0
   int flags;
   flags = fcntl(fd, F_GETFL);
   if (flags < 0) {
-    char *err_was = strerror(errno);
+    char* err_was = strerror(errno);
     LOGE("Error occured: %s", err_was);
     return -1;
   }
   flags |= O_NONBLOCK;
   int e = fcntl(fd, F_SETFL, flags);
   if (-1 == e) {
-    char *err_was = strerror(errno);
+    char* err_was = strerror(errno);
     LOGE("Error occured: %s", err_was);
   }
   return e;
   //#endif
   //  return 0;
 }
-ZCPRIVATE int zc_enable_tcp_no_delay(int fd) {
+ZC_PRIVATE int zc_enable_tcp_no_delay(int fd)
+{
 #if 0
   int val;
   int e = setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &val, sizeof(val));
@@ -183,7 +189,8 @@ ZCPRIVATE int zc_enable_tcp_no_delay(int fd) {
 #endif
   return 0;
 }
-ZCPRIVATE int zc_enable_keep_alive(int fd) {
+ZC_PRIVATE int zc_enable_keep_alive(int fd)
+{
 #if 0
   int oui = 1;
   int e = setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, &oui, sizeof(oui));
@@ -195,7 +202,8 @@ ZCPRIVATE int zc_enable_keep_alive(int fd) {
 #endif
   return 0;
 }
-ZCPRIVATE int zc_enable_reuse_port_address(int fd) {
+ZC_PRIVATE int zc_enable_reuse_port_address(int fd)
+{
 #if 0
   int reuse = 1;
   int e =  setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, (const char*)&reuse, sizeof(reuse));
@@ -234,8 +242,9 @@ ZCPRIVATE int zc_enable_reuse_port_address(int fd) {
 //  ev_io_start(loop,accept_watcher);
 //}
 
-int zc_net_basic_accept(int serversocketfd, struct sockaddr *sa,
-                        socklen_t *len) {
+int zc_net_basic_accept(int serversocketfd, struct sockaddr* sa,
+    socklen_t* len)
+{
   int fd;
   while (1) {
     fd = accept(serversocketfd, sa, len);
@@ -252,18 +261,20 @@ int zc_net_basic_accept(int serversocketfd, struct sockaddr *sa,
   }
   return fd;
 }
-int zc_net_unix_accept(int serversocketfd) {
+int zc_net_unix_accept(int serversocketfd)
+{
   int fd;
   struct sockaddr_un sa;
   socklen_t slen = sizeof(sa);
-  fd = zc_net_basic_accept(serversocketfd, (struct sockaddr *)&sa, &slen);
+  fd = zc_net_basic_accept(serversocketfd, (struct sockaddr*)&sa, &slen);
   if (fd == -1) {
     LOGV("error in zc_net_basic_accept", "");
   }
   return fd;
 }
 
-void __server_did_accept_client_socket(EV_P_ ev_io *io_watcher, int revents) {
+void __server_did_accept_client_socket(EV_P_ ev_io* io_watcher, int revents)
+{
   LOGV("__server_did_accept_client_socket", "");
 
   int ss = io_watcher->fd;
@@ -271,7 +282,7 @@ void __server_did_accept_client_socket(EV_P_ ev_io *io_watcher, int revents) {
   if (fd == -1) {
     LOGV("error in zc_net_unix_accept", "");
   }
-  zc_client_t *c = zc_client_new(fd);
+  zc_client_t* c = zc_client_new(fd);
 
 #if 0
   int fd;
@@ -297,7 +308,8 @@ void __server_did_accept_client_socket(EV_P_ ev_io *io_watcher, int revents) {
 }
 
 #define MAX_BUF_LEN 1024
-void recv_socket_cb(struct ev_loop *loop, ev_io *w, int revents) {
+void recv_socket_cb(struct ev_loop* loop, ev_io* w, int revents)
+{
   char buf[MAX_BUF_LEN];
   int ret = 0;
 
@@ -328,8 +340,9 @@ void recv_socket_cb(struct ev_loop *loop, ev_io *w, int revents) {
   free(w);
 }
 
-void write_socket_cb(struct ev_loop *loop, ev_io *w, int revents) {
-  char buf[MAX_BUF_LEN] = {0};
+void write_socket_cb(struct ev_loop* loop, ev_io* w, int revents)
+{
+  char buf[MAX_BUF_LEN] = { 0 };
 
   snprintf(buf, MAX_BUF_LEN - 1, "this is test message from libev \n");
 

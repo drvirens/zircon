@@ -3,7 +3,8 @@
 #include "zc_utils.h"
 
 // ---------------------------------------------------------------------- Main
-extern int main(int argC, char *argV[]) {
+extern int main(int argC, char* argV[])
+{
   /*
    Quick log tests
    */
@@ -19,13 +20,13 @@ extern int main(int argC, char *argV[]) {
 
   int three = 3;
   LOGV("alex mudof music zc_log_level_debug %s for %d years", ", BOOM, ",
-       three);
+      three);
 
   /*
    Server code start
    */
   LOGV("starting...", "");
-  zc_server_t *ss = zc_server_new(ZC_DEFAULT_SOCKET_PATH);
+  zc_server_t* ss = zc_server_new(ZC_DEFAULT_SOCKET_PATH);
   zc_server_start(ss);
   LOGV("started! OK", "");
   return 0;

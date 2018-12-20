@@ -5,10 +5,11 @@
 #include <sys/un.h>
 #include <unistd.h>
 
-char *socket_path = "/tmp/virendra";
+char* socket_path = "/tmp/virendra";
 // char *socket_path = "\0hidden";
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[])
+{
   struct sockaddr_un addr;
   char buf[100];
   int fd, rc;
@@ -30,7 +31,7 @@ int main(int argc, char *argv[]) {
     strncpy(addr.sun_path, socket_path, sizeof(addr.sun_path) - 1);
   }
 
-  if (connect(fd, (struct sockaddr *)&addr, sizeof(addr)) == -1) {
+  if (connect(fd, (struct sockaddr*)&addr, sizeof(addr)) == -1) {
     perror("connect error");
     exit(-1);
   }

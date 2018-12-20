@@ -12,12 +12,13 @@ struct tag_zc_client {
 
 // ----------------------------------------------------------------------
 // Private Functions Declarations
-ZCPRIVATE void __common_init(zc_client_t *c, int fd);
+ZC_PRIVATE void __common_init(zc_client_t* c, int fd);
 
 // ---------------------------------------------------------------------- Public
 // Impl
-ZCEXPORT zc_client_t *zc_client_new(int fd) {
-  zc_client_t *obj = (zc_client_t *)zc_malloc(sizeof(zc_client_t));
+ZC_PUBLIC zc_client_t* zc_client_new(int fd)
+{
+  zc_client_t* obj = (zc_client_t*)zc_malloc(sizeof(zc_client_t));
   if (obj) {
     memset(obj, 0, sizeof(zc_client_t));
     __common_init(obj, fd);
@@ -27,4 +28,4 @@ ZCEXPORT zc_client_t *zc_client_new(int fd) {
 
 // ----------------------------------------------------------------------
 // Private Impl
-ZCPRIVATE void __common_init(zc_client_t *c, int fd) {}
+ZC_PRIVATE void __common_init(zc_client_t* c, int fd) {}
