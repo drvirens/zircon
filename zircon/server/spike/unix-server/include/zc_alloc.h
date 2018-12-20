@@ -4,9 +4,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "zc_utils.h"
+  
 #include <stdlib.h>
+#include "zc_utils.h"
 
 ZC_PUBLIC void* zc_malloc(size_t size);
 ZC_PUBLIC void zc_free(void* ptr);

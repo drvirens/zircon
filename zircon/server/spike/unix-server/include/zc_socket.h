@@ -2,6 +2,7 @@
 #define __zc_socket_h__
 
 #include "zc_utils.h"
+#include "zc_socket_native.h"
 
 #if defined __cplusplus
 extern "C" {

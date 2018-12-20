@@ -1,19 +1,15 @@
 #include <errno.h>
-#include <fcntl.h>
 #include <memory.h>
-#include <netinet/in.h>
-#include <netinet/tcp.h>
 #include <stdio.h>
 #include <string.h>
-#include <sys/socket.h>
-#include <sys/un.h>
-#include <unistd.h>
+
 
 #include "zc_alloc.h"
 #include "zc_assert.h"
 #include "zc_global_constants.h"
 #include "zc_log.h"
 #include "zc_socket.h"
+
 
 #define PRECONDITION(thiz_ptr)    \
   zc_assert_not_null((thiz_ptr)); \
@@ -57,6 +53,7 @@ ZC_PUBLIC void delete_instance(zc_socket* thiz)
 {
   TRACE
   if (thiz) {
+    unlink(thiz->unix_socket_path_);
     zc_free(thiz);
   }
 }
@@ -86,7 +83,7 @@ ZC_PUBLIC zc_socket_error_e socket_create_unix_socket(zc_socket* thiz,
   //
   // ------------------------- socket
   //
-  int sfd = socket(AF_UNIX, SOCK_STREAM, 0);
+  int sfd = zc_net_socket(AF_UNIX, SOCK_STREAM, 0);
   if (sfd < 0) {
     e = zc_socket_invalid_path;
     return e;
@@ -230,7 +227,7 @@ ZC_PRIVATE zc_socket_error_e __pri_unix_bind_and_listen(zc_socket* thiz, int fd,
   //
   // ------------------------- bind
   //
-  err = bind(fd, (struct sockaddr*)sa, sizeof(struct sockaddr_un));
+  err = zc_net_bind(fd, (struct sockaddr*)sa, sizeof(struct sockaddr_un));
   if (err < 0) {
     char* err_was = strerror(errno);
     LOGE("Error occured: %s", err_was);
@@ -241,7 +238,7 @@ ZC_PRIVATE zc_socket_error_e __pri_unix_bind_and_listen(zc_socket* thiz, int fd,
   //
   // ------------------------- listen
   //
-  err = listen(fd, backlog);
+  err = zc_net_listen(fd, backlog);
   if (err < 0) {
     char* err_was = strerror(errno);
     LOGE("Error occured: %s", err_was);
@@ -258,7 +255,7 @@ ZC_PRIVATE int __pri_basic_accept(int serversocketfd, struct sockaddr* sa, sockl
   zc_socket_error_e e = zc_socket_err_failed;
   int fd;
   while (1) {
-    fd = accept(serversocketfd, sa, len);
+    fd = zc_net_accept(serversocketfd, sa, len);
     if (-1 == fd) {
       if (errno == EINTR) { // sys call interuppted
         continue;
