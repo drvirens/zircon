@@ -2,15 +2,14 @@
 #define __zc_utils_h__
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-//syntax
-#define ZCEXPORT extern
-#define ZCPRIVATE static
+// syntax
+#define ZC_PUBLIC extern
+#define ZC_PRIVATE static
 
-//todos
+// todos
 #define TODO(expr)
 
 #ifdef __cplusplus

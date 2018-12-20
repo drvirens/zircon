@@ -2,14 +2,14 @@
 #define __zc_alloc_h__
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
-
+  
 #include <stdlib.h>
 #include "zc_utils.h"
 
-    ZCEXPORT void *zc_malloc(size_t size);
+ZC_PUBLIC void* zc_malloc(size_t size);
+ZC_PUBLIC void zc_free(void* ptr);
 
 #ifdef __cplusplus
 }
