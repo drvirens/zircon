@@ -10,6 +10,7 @@ extern "C"
 #include "zc_utils.h"
 
     ZCEXPORT void *zc_malloc(size_t size);
+    ZCEXPORT void zc_free(void *ptr);
 
 #ifdef __cplusplus
 }

@@ -11,8 +11,14 @@
 #include "zc_log.h"
 #include "zc_alloc.h"
 #include "zc_assert.h"
-#include "zc_assert.h"
 #include "zc_global_constants.h"
+
+#define PRECONDITION(thiz_ptr)    \
+  zc_assert_not_null((thiz_ptr)); \
+  if (!(thiz_ptr))                \
+  {                               \
+    return zc_socket_err_failed;  \
+  }
 
 // ---------------------------------------------------------------------- Private Declarations
 
@@ -24,6 +30,7 @@ struct tag_zc_socket
 };
 
 // ---------------------------------------------------------------------- Private Function Prototypes
+ZCPRIVATE void __pri_common_init(zc_socket *thiz);
 
 // ---------------------------------------------------------------------- Public API
 
@@ -33,57 +40,111 @@ ZCEXPORT zc_socket *new_instance()
   zc_socket *obj = (zc_socket *)zc_malloc(sizeof(zc_socket));
   if (obj)
   {
+    memset(obj, 0, sizeof(zc_socket));
+    __pri_common_init(obj);
   }
   return obj;
 }
-ZCEXPORT void delete_instance(zc_socket *thiz){TRACE
 
-}
-
-ZCEXPORT zc_socket_error_e socket_create_unix_socket(zc_socket *thiz, const char *local_path)
+ZCEXPORT void delete_instance(zc_socket *thiz)
 {
   TRACE
+  if (thiz)
+  {
+    zc_free(thiz);
+  }
+}
+
+ZCEXPORT zc_socket_error_e socket_create_unix_socket(zc_socket *thiz, const char *local_path, int *fd)
+{
+  TRACE
+  PRECONDITION(thiz);
   zc_socket_error_e e = zc_socket_err_failed;
+
+  //validate the path
+  if (!(local_path && local_path[0] != '\0'))
+  {
+    e = zc_socket_invalid_path;
+    return e;
+  }
+  size_t pathlen = strlen(local_path);
+  if (pathlen >= k_global_path_len - 1)
+  {
+    e = zc_socket_invalid_path;
+    return e;
+  }
+
+  //copy path
+  strcpy(thiz->unix_socket_path_, local_path);
+
+  //
+  // ------------------------- socket
+  //
+  int sfd = socket(AF_UNIX, SOCK_STREAM, 0);
+  if (sfd < 0)
+  {
+    e = zc_socket_invalid_path;
+    return e;
+  }
+
+  *fd = sfd;
+
+  e = zc_socket_err_ok;
+
   return e;
 }
 ZCEXPORT zc_socket_error_e socket_config_enable_nonblocking(zc_socket *thiz)
 {
   TRACE
+  PRECONDITION(thiz);
   zc_socket_error_e e = zc_socket_err_failed;
   return e;
 }
 ZCEXPORT zc_socket_error_e socket_config_enable_tcpnodelay(zc_socket *thiz)
 {
   TRACE
+  PRECONDITION(thiz);
   zc_socket_error_e e = zc_socket_err_failed;
   return e;
 }
 ZCEXPORT zc_socket_error_e socket_config_enable_keepalive(zc_socket *thiz)
 {
   TRACE
+  PRECONDITION(thiz);
   zc_socket_error_e e = zc_socket_err_failed;
   return e;
 }
 ZCEXPORT zc_socket_error_e socket_bind_and_listen(zc_socket *thiz)
 {
   TRACE
+  PRECONDITION(thiz);
   zc_socket_error_e e = zc_socket_err_failed;
   return e;
 }
 ZCEXPORT zc_socket_error_e socket_connect(zc_socket *thiz)
 {
   TRACE
+  PRECONDITION(thiz);
   zc_socket_error_e e = zc_socket_err_failed;
   return e;
 }
 ZCEXPORT zc_socket_error_e socket_accept(zc_socket *thiz)
 {
   TRACE
+  PRECONDITION(thiz);
   zc_socket_error_e e = zc_socket_err_failed;
   return e;
 }
 ZCEXPORT const char *socket_error_msg(zc_socket *thiz)
 {
   TRACE
-  return 0;
+  PRECONDITION(thiz);
+  char *err_was = strerror(errno);
+  return (const char *)err_was;
+}
+
+#pragma mark - Private
+ZCPRIVATE void __pri_common_init(zc_socket *thiz)
+{
+  TRACE
 }
