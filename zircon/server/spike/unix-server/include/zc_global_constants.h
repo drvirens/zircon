@@ -2,8 +2,7 @@
 #define __zc_global_constants_h__
 
 #if defined __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 #define k_global_path_len 512

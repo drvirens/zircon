@@ -8,9 +8,8 @@
 #include <catch2/catch.hpp>
 #include "zc_socket.h"
 
-TEST_CASE("create socket", "[zc_socket]")
-{
-  zc_socket *s = new_instance();
+TEST_CASE("create socket", "[zc_socket]") {
+  zc_socket *s = new_zc_socket(zc_socket_type_unix);
   REQUIRE(s != 0);
   zc_socket_error_e e;
   int fd;
@@ -20,9 +19,8 @@ TEST_CASE("create socket", "[zc_socket]")
   delete_instance(s);
 }
 
-TEST_CASE("configure socket", "[zc_socket]")
-{
-  zc_socket *s = new_instance();
+TEST_CASE("configure socket", "[zc_socket]") {
+  zc_socket *s = new_zc_socket(zc_socket_type_unix);
   REQUIRE(s != 0);
   zc_socket_error_e e;
   int fd;
@@ -38,45 +36,42 @@ TEST_CASE("configure socket", "[zc_socket]")
   delete_instance(s);
 }
 
-TEST_CASE("bind and listen socket", "[zc_socket]")
-{
-  zc_socket *s = new_instance();
+TEST_CASE("bind and listen socket", "[zc_socket]") {
+  zc_socket *s = new_zc_socket(zc_socket_type_unix);
   REQUIRE(s != 0);
   zc_socket_error_e e;
   int fd;
   e = socket_create_unix_socket(s, "/tmp/zircon.sock", &fd);
   REQUIRE(e == zc_socket_err_ok);
-  e = socket_bind_and_listen(s);
+  e = socket_bind_and_listen(s, fd);
   REQUIRE(e == zc_socket_err_ok);
 
   delete_instance(s);
 }
-TEST_CASE("accept socket", "[zc_socket]")
-{
-  zc_socket *s = new_instance();
+TEST_CASE("accept socket", "[zc_socket]") {
+  zc_socket *s = new_zc_socket(zc_socket_type_unix);
   REQUIRE(s != 0);
   zc_socket_error_e e;
   int fd;
   e = socket_create_unix_socket(s, "/tmp/zircon.sock", &fd);
   REQUIRE(e == zc_socket_err_ok);
-  e = socket_bind_and_listen(s);
+  e = socket_bind_and_listen(s, fd);
   REQUIRE(e == zc_socket_err_ok);
-  e = socket_accept(s);
+  e = socket_accept(s, fd);
   REQUIRE(e == zc_socket_err_ok);
 
   delete_instance(s);
 }
-TEST_CASE("error msg", "[zc_socket]")
-{
-  zc_socket *s = new_instance();
+TEST_CASE("error msg", "[zc_socket]") {
+  zc_socket *s = new_zc_socket(zc_socket_type_unix);
   REQUIRE(s != 0);
   zc_socket_error_e e;
   int fd;
   e = socket_create_unix_socket(s, "/tmp/zircon.sock", &fd);
   REQUIRE(e == zc_socket_err_ok);
-  e = socket_bind_and_listen(s);
+  e = socket_bind_and_listen(s, fd);
   REQUIRE(e == zc_socket_err_ok);
-  e = socket_accept(s);
+  e = socket_accept(s, fd);
   REQUIRE(e == zc_socket_err_ok);
 
   const char *errmsg = socket_error_msg(s);
