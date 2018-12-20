@@ -67,7 +67,7 @@ TEST_CASE("accept socket", "[zc_socket]")
   REQUIRE(e == zc_socket_err_ok);
   e = socket_bind_and_listen(s, fd, &sa, backlog);
   REQUIRE(e == zc_socket_err_ok);
-  //e = socket_accept(s, fd);
+  e = socket_accept(s, fd);
   REQUIRE(e == zc_socket_err_ok);
 
   delete_instance(s);
@@ -84,7 +84,7 @@ TEST_CASE("error msg", "[zc_socket]")
   REQUIRE(e == zc_socket_err_ok);
   e = socket_bind_and_listen(s, fd, &sa, backlog);
   REQUIRE(e == zc_socket_err_ok);
-  //e = socket_accept(s, fd);
+  e = socket_accept(s, fd);
   REQUIRE(e == zc_socket_err_ok);
 
   const char* errmsg = socket_error_msg(s);

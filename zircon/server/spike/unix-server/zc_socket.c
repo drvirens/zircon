@@ -32,7 +32,7 @@ struct tag_zc_socket {
 ZC_PRIVATE void __pri_common_init(zc_socket* thiz);
 ZC_PRIVATE zc_socket_error_e __pri_unix_bind_and_listen(zc_socket* thiz, int fd, struct sockaddr_un* sa, int backlog);
 ZC_PRIVATE int __pri_basic_accept(int serversocketfd, struct sockaddr* sa, socklen_t* len);
-ZC_PRIVATE zc_socket_error_e __pri_unix_accept(int serversocketfd);
+ZC_PRIVATE zc_socket_error_e __pri_unix_accept(int serversocketfd, int *accepted_fd);
 
 // ---------------------------------------------------------------------- Public
 // API
@@ -190,7 +190,8 @@ ZC_PUBLIC zc_socket_error_e socket_accept(zc_socket* thiz, int fd)
   TRACE
   PRECONDITION(thiz);
   zc_socket_error_e e = zc_socket_err_failed;
-  e = __pri_unix_accept(fd);
+  int accepted_fd;
+  e = __pri_unix_accept(fd, &accepted_fd);
   return e;
 }
 ZC_PUBLIC const char* socket_error_msg(zc_socket* thiz)
@@ -267,7 +268,7 @@ ZC_PRIVATE int __pri_basic_accept(int serversocketfd, struct sockaddr* sa, sockl
   }
   return fd;
 }
-ZC_PRIVATE zc_socket_error_e __pri_unix_accept(int serversocketfd)
+ZC_PRIVATE zc_socket_error_e __pri_unix_accept(int serversocketfd, int *accepted_fd)
 {
   zc_socket_error_e e = zc_socket_err_failed;
   int fd;
@@ -278,5 +279,7 @@ ZC_PRIVATE zc_socket_error_e __pri_unix_accept(int serversocketfd)
     LOGV("error in zc_net_basic_accept", "");
     return e;
   }
+  *accepted_fd = fd;
+  e = zc_socket_err_ok;
   return e;
 }
