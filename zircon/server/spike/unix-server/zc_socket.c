@@ -34,6 +34,7 @@ struct tag_zc_socket {
 // ----------------------------------------------------------------------
 // Private Function Prototypes
 ZC_PRIVATE void __pri_common_init(zc_socket* thiz);
+ZC_PRIVATE zc_socket_error_e __pri_unix_bind_and_listen(zc_socket* thiz, int fd, struct sockaddr_un* sa, int backlog);
 
 // ---------------------------------------------------------------------- Public
 // API
@@ -96,8 +97,7 @@ ZC_PUBLIC zc_socket_error_e socket_create_unix_socket(zc_socket* thiz,
   return e;
 }
 
-ZC_PUBLIC zc_socket_error_e
-socket_set_reuseportaddress(zc_socket* thiz, int fd)
+ZC_PUBLIC zc_socket_error_e socket_set_reuseportaddress(zc_socket* thiz, int fd)
 {
   TRACE
   PRECONDITION(thiz);
@@ -115,8 +115,7 @@ socket_set_reuseportaddress(zc_socket* thiz, int fd)
   return 0;
 }
 
-ZC_PUBLIC zc_socket_error_e socket_set_nonblocking(zc_socket* thiz,
-    int fd)
+ZC_PUBLIC zc_socket_error_e socket_set_nonblocking(zc_socket* thiz, int fd)
 {
   TRACE
   PRECONDITION(thiz);
@@ -139,8 +138,7 @@ ZC_PUBLIC zc_socket_error_e socket_set_nonblocking(zc_socket* thiz,
   e = zc_socket_err_ok;
   return e;
 }
-ZC_PUBLIC zc_socket_error_e socket_set_tcpnodelay(zc_socket* thiz,
-    int fd)
+ZC_PUBLIC zc_socket_error_e socket_set_tcpnodelay(zc_socket* thiz, int fd)
 {
   TRACE
   PRECONDITION(thiz);
@@ -156,8 +154,7 @@ ZC_PUBLIC zc_socket_error_e socket_set_tcpnodelay(zc_socket* thiz,
   e = zc_socket_err_ok;
   return e;
 }
-ZC_PUBLIC zc_socket_error_e socket_set_keepalive(zc_socket* thiz,
-    int fd)
+ZC_PUBLIC zc_socket_error_e socket_set_keepalive(zc_socket* thiz, int fd)
 {
   TRACE
   PRECONDITION(thiz);
@@ -172,11 +169,14 @@ ZC_PUBLIC zc_socket_error_e socket_set_keepalive(zc_socket* thiz,
   e = zc_socket_err_ok;
   return e;
 }
-ZC_PUBLIC zc_socket_error_e socket_bind_and_listen(zc_socket* thiz, int fd)
+ZC_PUBLIC zc_socket_error_e socket_bind_and_listen(zc_socket* thiz, int fd, struct sockaddr_un* sa, int backlog)
 {
   TRACE
   PRECONDITION(thiz);
   zc_socket_error_e e = zc_socket_err_failed;
+  if (thiz->type_ == zc_socket_type_unix) {
+    e = __pri_unix_bind_and_listen(thiz, fd, sa, backlog);
+  }
   return e;
 }
 ZC_PUBLIC zc_socket_error_e socket_connect(zc_socket* thiz, int fd)
@@ -203,11 +203,11 @@ ZC_PUBLIC const char* socket_error_msg(zc_socket* thiz)
 #pragma mark - Private
 ZC_PRIVATE void __pri_common_init(zc_socket* thiz){ TRACE }
 
-ZC_PRIVATE int __pri_unix_bind_and_listen(zc_socket* thiz, int fd,
+ZC_PRIVATE zc_socket_error_e __pri_unix_bind_and_listen(zc_socket* thiz, int fd,
     struct sockaddr_un* sa, int backlog)
 {
   TRACE
-  zc_socket_error_e err = zc_socket_err_failed;
+  zc_socket_error_e e = zc_socket_err_failed;
 
   memset(sa, 0, sizeof(struct sockaddr_un));
   sa->sun_family = AF_LOCAL;
@@ -217,11 +217,11 @@ ZC_PRIVATE int __pri_unix_bind_and_listen(zc_socket* thiz, int fd,
   // ------------------------- access
   //
   // do we hace access to this path?
-  err = access(sa->sun_path, F_OK);
+  int err = access(sa->sun_path, F_OK);
   if (0 == err) {
     LOGV("fock. error. bogus path cant access.", "");
     unlink(sa->sun_path);
-    return -1;
+    return e;
   }
 
   //
@@ -232,7 +232,7 @@ ZC_PRIVATE int __pri_unix_bind_and_listen(zc_socket* thiz, int fd,
     char* err_was = strerror(errno);
     LOGE("Error occured: %s", err_was);
     unlink(sa->sun_path);
-    return -1;
+    return e;
   }
 
   //
@@ -243,8 +243,9 @@ ZC_PRIVATE int __pri_unix_bind_and_listen(zc_socket* thiz, int fd,
     char* err_was = strerror(errno);
     LOGE("Error occured: %s", err_was);
     unlink(sa->sun_path);
-    return -1;
+    return e;
   }
 
-  return err;
+  e = zc_socket_err_ok;
+  return e;
 }

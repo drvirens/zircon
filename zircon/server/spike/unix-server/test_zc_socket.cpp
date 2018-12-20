@@ -4,7 +4,8 @@
 //
 //  Created by Virendra Shakya on 12/19/18.
 //
-
+#include <sys/socket.h>
+#include <sys/un.h>
 #include "zc_socket.h"
 #include <catch2/catch.hpp>
 
@@ -44,9 +45,11 @@ TEST_CASE("bind and listen socket", "[zc_socket]")
   REQUIRE(s != 0);
   zc_socket_error_e e;
   int fd;
+  struct sockaddr_un sa;
+  int backlog = 10;
   e = socket_create_unix_socket(s, "/tmp/zircon.sock", &fd);
   REQUIRE(e == zc_socket_err_ok);
-  e = socket_bind_and_listen(s, fd);
+  e = socket_bind_and_listen(s, fd, &sa, backlog);
   REQUIRE(e == zc_socket_err_ok);
 
   delete_instance(s);
@@ -57,9 +60,11 @@ TEST_CASE("accept socket", "[zc_socket]")
   REQUIRE(s != 0);
   zc_socket_error_e e;
   int fd;
+  struct sockaddr_un sa;
+  int backlog = 10;
   e = socket_create_unix_socket(s, "/tmp/zircon.sock", &fd);
   REQUIRE(e == zc_socket_err_ok);
-  e = socket_bind_and_listen(s, fd);
+  e = socket_bind_and_listen(s, fd, &sa, backlog);
   REQUIRE(e == zc_socket_err_ok);
   e = socket_accept(s, fd);
   REQUIRE(e == zc_socket_err_ok);
@@ -72,9 +77,11 @@ TEST_CASE("error msg", "[zc_socket]")
   REQUIRE(s != 0);
   zc_socket_error_e e;
   int fd;
+  struct sockaddr_un sa;
+  int backlog = 10;
   e = socket_create_unix_socket(s, "/tmp/zircon.sock", &fd);
   REQUIRE(e == zc_socket_err_ok);
-  e = socket_bind_and_listen(s, fd);
+  e = socket_bind_and_listen(s, fd, &sa, backlog);
   REQUIRE(e == zc_socket_err_ok);
   e = socket_accept(s, fd);
   REQUIRE(e == zc_socket_err_ok);
