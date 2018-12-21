@@ -13,10 +13,11 @@ extern "C" {
 #include <netinet/tcp.h>
 #include "zc_utils.h"
   
-ZC_PUBLIC int zc_net_socket(int domain, int type, int protocol);
-ZC_PUBLIC int zc_net_accept(int fd, struct sockaddr* addr, socklen_t* len);
-ZC_PUBLIC int zc_net_bind(int fd, const struct sockaddr* addr, socklen_t len);
-ZC_PUBLIC int zc_net_listen(int fd, int backlog);
+ZC_PUBLIC int NET_socket(int domain, int type, int protocol);
+ZC_PUBLIC int NET_accept(int fd, struct sockaddr* addr, socklen_t* len);
+ZC_PUBLIC int NET_bind(int fd, const struct sockaddr* addr, socklen_t len);
+ZC_PUBLIC int NET_listen(int fd, int backlog);
+  ZC_PUBLIC int NET_close(int fd);
 
 #ifdef __cplusplus
 }

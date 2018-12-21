@@ -3,6 +3,6 @@
 
 TEST_CASE("server test", "[zc_server]")
 {
-  zc_server_t* server = zc_server_new("/tmp/deleteanytime");
+  zc_server_t* server = SERVER_alloc("/tmp/deleteanytime");
   REQUIRE(server != 0);
 }

@@ -10,7 +10,7 @@
 #include "zc_log.h"
 
 #define PRECONDITION(thiz_ptr)    \
-  zc_assert_not_null((thiz_ptr)); \
+  ASSERT_not_null((thiz_ptr)); \
   if (!(thiz_ptr)) {              \
     return zc_socket_err_failed;  \
   }
@@ -35,10 +35,10 @@ ZC_PRIVATE int __pri_basic_accept(int serversocketfd, struct sockaddr* sa, sockl
 // ---------------------------------------------------------------------- Public
 // API
 
-ZC_PUBLIC zc_socket_t* new_zc_socket(zc_socket_type type)
+ZC_PUBLIC zc_socket_t* SOCKET_alloc(zc_socket_type type)
 {
   TRACE
-  zc_socket_t* obj = (zc_socket_t*)zc_malloc(sizeof(zc_socket_t));
+  zc_socket_t* obj = (zc_socket_t*)ZIRCON_malloc(sizeof(zc_socket_t));
   if (obj) {
     memset(obj, 0, sizeof(zc_socket_t));
     obj->type_ = type;
@@ -47,16 +47,16 @@ ZC_PUBLIC zc_socket_t* new_zc_socket(zc_socket_type type)
   return obj;
 }
 
-ZC_PUBLIC void delete_instance(zc_socket_t* thiz)
+ZC_PUBLIC void SOCKET_dealloc(zc_socket_t* thiz)
 {
   TRACE
   if (thiz) {
     unlink(thiz->unix_socket_path_);
-    zc_free(thiz);
+    ZIRCON_free(thiz);
   }
 }
 
-ZC_PUBLIC zc_socket_error_e socket_create_unix_socket(zc_socket_t* thiz,
+ZC_PUBLIC zc_socket_error_e SOCKET_socket_un(zc_socket_t* thiz,
     const char* local_path,
     int* fd)
 {
@@ -81,7 +81,7 @@ ZC_PUBLIC zc_socket_error_e socket_create_unix_socket(zc_socket_t* thiz,
   //
   // ------------------------- socket
   //
-  int sfd = zc_net_socket(AF_UNIX, SOCK_STREAM, 0);
+  int sfd = NET_socket(AF_UNIX, SOCK_STREAM, 0);
   if (sfd < 0) {
     e = zc_socket_invalid_path;
     return e;
@@ -94,7 +94,7 @@ ZC_PUBLIC zc_socket_error_e socket_create_unix_socket(zc_socket_t* thiz,
   return e;
 }
 
-ZC_PUBLIC zc_socket_error_e socket_set_reuseportaddress(int fd)
+ZC_PUBLIC zc_socket_error_e SOCKET_set_reuseportaddr(int fd)
 {
   TRACE
   zc_socket_error_e e = zc_socket_err_failed;
@@ -104,7 +104,7 @@ ZC_PUBLIC zc_socket_error_e socket_set_reuseportaddress(int fd)
       sizeof(reuse));
   if (err < 0) {
     char* err_was = strerror(errno);
-    LOGE("Error occured: %s", err_was);
+    LOG_e("Error occured: %s", err_was);
     return e;
   }
   e = zc_socket_err_ok;
@@ -120,20 +120,20 @@ ZC_PUBLIC zc_socket_error_e SOCKET_set_nonblocking(int fd)
   flags = fcntl(fd, F_GETFL);
   if (flags < 0) {
     char* err_was = strerror(errno);
-    LOGE("Error occured: %s", err_was);
+    LOG_e("Error occured: %s", err_was);
     return e;
   }
   flags |= O_NONBLOCK;
   int err = fcntl(fd, F_SETFL, flags);
   if (-1 == err) {
     char* err_was = strerror(errno);
-    LOGE("Error occured: %s", err_was);
+    LOG_e("Error occured: %s", err_was);
     return e;
   }
   e = zc_socket_err_ok;
   return e;
 }
-ZC_PUBLIC zc_socket_error_e socket_set_tcpnodelay(int fd)
+ZC_PUBLIC zc_socket_error_e SOCKET_set_tcpnodelay(int fd)
 {
   TRACE
   zc_socket_error_e e = zc_socket_err_failed;
@@ -142,13 +142,13 @@ ZC_PUBLIC zc_socket_error_e socket_set_tcpnodelay(int fd)
   int err = setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &val, sizeof(val));
   if (-1 == err) {
     char* err_was = strerror(errno);
-    LOGE("Error occured: %s", err_was);
+    LOG_e("Error occured: %s", err_was);
     return e;
   }
   e = zc_socket_err_ok;
   return e;
 }
-ZC_PUBLIC zc_socket_error_e socket_set_keepalive(int fd)
+ZC_PUBLIC zc_socket_error_e SOCKET_set_keepalive(int fd)
 {
   TRACE
   zc_socket_error_e e = zc_socket_err_failed;
@@ -156,13 +156,13 @@ ZC_PUBLIC zc_socket_error_e socket_set_keepalive(int fd)
   int err = setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, &oui, sizeof(oui));
   if (-1 == err) {
     char* err_was = strerror(errno);
-    LOGE("Error occured: %s", err_was);
+    LOG_e("Error occured: %s", err_was);
     return e;
   }
   e = zc_socket_err_ok;
   return e;
 }
-ZC_PUBLIC zc_socket_error_e socket_bind_and_listen(zc_socket_t* thiz, int fd, struct sockaddr_un* sa, int backlog)
+ZC_PUBLIC zc_socket_error_e SOCKET_bind_n_listen(zc_socket_t* thiz, int fd, struct sockaddr_un* sa, int backlog)
 {
   TRACE
   PRECONDITION(thiz);
@@ -172,14 +172,14 @@ ZC_PUBLIC zc_socket_error_e socket_bind_and_listen(zc_socket_t* thiz, int fd, st
   }
   return e;
 }
-ZC_PUBLIC zc_socket_error_e socket_connect(zc_socket_t* thiz, int fd)
+ZC_PUBLIC zc_socket_error_e SOCKET_connect(zc_socket_t* thiz, int fd)
 {
   TRACE
   PRECONDITION(thiz);
   zc_socket_error_e e = zc_socket_err_failed;
   return e;
 }
-ZC_PUBLIC zc_socket_error_e socket_accept(zc_socket_t* thiz, int fd)
+ZC_PUBLIC zc_socket_error_e SOCKET_accept(zc_socket_t* thiz, int fd)
 {
   TRACE
   PRECONDITION(thiz);
@@ -188,11 +188,15 @@ ZC_PUBLIC zc_socket_error_e socket_accept(zc_socket_t* thiz, int fd)
   e = SOCKET_accept_un(fd, &accepted_fd);
   return e;
 }
-ZC_PUBLIC const char* socket_error_msg(zc_socket_t* thiz)
+ZC_PUBLIC const char* SOCKET_error_msg(zc_socket_t* thiz)
 {
   TRACE
   char* err_was = strerror(errno);
   return (const char*)err_was;
+}
+ZC_PUBLIC void SOCKET_close(int fd)
+{TRACE
+  NET_close(fd);
 }
 
 #pragma mark - Private
@@ -214,7 +218,7 @@ ZC_PRIVATE zc_socket_error_e __pri_unix_bind_and_listen(zc_socket_t* thiz, int f
   // do we hace access to this path?
   int err = access(sa->sun_path, F_OK);
   if (0 == err) {
-    LOGV("fock. error. bogus path cant access.", "");
+    LOG_v("fock. error. bogus path cant access.", "");
     unlink(sa->sun_path);
     return e;
   }
@@ -222,10 +226,10 @@ ZC_PRIVATE zc_socket_error_e __pri_unix_bind_and_listen(zc_socket_t* thiz, int f
   //
   // ------------------------- bind
   //
-  err = zc_net_bind(fd, (struct sockaddr*)sa, sizeof(struct sockaddr_un));
+  err = NET_bind(fd, (struct sockaddr*)sa, sizeof(struct sockaddr_un));
   if (err < 0) {
     char* err_was = strerror(errno);
-    LOGE("Error occured: %s", err_was);
+    LOG_e("Error occured: %s", err_was);
     unlink(sa->sun_path);
     return e;
   }
@@ -233,10 +237,10 @@ ZC_PRIVATE zc_socket_error_e __pri_unix_bind_and_listen(zc_socket_t* thiz, int f
   //
   // ------------------------- listen
   //
-  err = zc_net_listen(fd, backlog);
+  err = NET_listen(fd, backlog);
   if (err < 0) {
     char* err_was = strerror(errno);
-    LOGE("Error occured: %s", err_was);
+    LOG_e("Error occured: %s", err_was);
     unlink(sa->sun_path);
     return e;
   }
@@ -249,7 +253,7 @@ ZC_PRIVATE int __pri_basic_accept(int serversocketfd, struct sockaddr* sa, sockl
 {TRACE
   int fd;
   while (1) {
-    fd = zc_net_accept(serversocketfd, sa, len);
+    fd = NET_accept(serversocketfd, sa, len);
     if (-1 == fd) {
       if (errno == EINTR) { // sys call interuppted
         continue;
@@ -270,7 +274,8 @@ zc_socket_error_e SOCKET_accept_un(const int serversocketfd, int *accepted_fd)
   socklen_t slen = sizeof(sa);
   fd = __pri_basic_accept(serversocketfd, (struct sockaddr*)&sa, &slen);
   if (fd == -1) {
-    LOGV("error in zc_net_basic_accept", "");
+    char* err_was = strerror(errno);
+    LOG_e("Error occured: %s", err_was);
     return e;
   }
   *accepted_fd = fd;

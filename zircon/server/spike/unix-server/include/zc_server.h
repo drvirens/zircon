@@ -16,8 +16,9 @@ typedef enum tag_error_type {
 
 typedef struct tag_server zc_server_t;
 
-ZC_PUBLIC zc_server_t* zc_server_new(const char* path);
-ZC_PUBLIC int zc_server_start(zc_server_t* server);
+ZC_PUBLIC zc_server_t*  SERVER_alloc(const char* path);
+ZC_PUBLIC void          SERVER_dealloc(zc_server_t* thiz);
+ZC_PUBLIC int           SERVER_start(zc_server_t* thiz);
 
 #ifdef __cplusplus
 }

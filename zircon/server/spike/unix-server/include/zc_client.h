@@ -10,7 +10,8 @@ extern "C" {
 
 typedef struct tag_zc_client zc_client_t;
 
-ZC_PUBLIC zc_client_t* zc_client_new(int fd);
+ZC_PUBLIC zc_client_t* CLIENT_alloc(int fd);
+ZC_PUBLIC void CLIENT_dealloc(zc_client_t* thiz);
 
 #ifdef __cplusplus
 }

@@ -24,12 +24,12 @@ ZC_PUBLIC void zc_set_log_level(int level);
 
 ZC_PUBLIC void zc_log(int level, const char* fmt, ...);
 
-#define LOGV(expr, ...) zc_log(zc_log_level_verbose, (expr), __VA_ARGS__);
-#define LOGD(expr, ...) zc_log(zc_log_level_debug, (expr), __VA_ARGS__);
-#define LOGW(expr, ...) zc_log(zc_log_level_warning, (expr), __VA_ARGS__);
-#define LOGE(expr, ...) zc_log(zc_log_level_error, (expr), __VA_ARGS__);
-#define LOGF(expr, ...) zc_log(zc_log_level_fatal, (expr), __VA_ARGS__);
-#define TRACE LOGD("%s", __PRETTY_FUNCTION__)
+#define LOG_v(expr, ...) zc_log(zc_log_level_verbose, (expr), __VA_ARGS__);
+#define LOG_d(expr, ...) zc_log(zc_log_level_debug, (expr), __VA_ARGS__);
+#define LOG_w(expr, ...) zc_log(zc_log_level_warning, (expr), __VA_ARGS__);
+#define LOG_e(expr, ...) zc_log(zc_log_level_error, (expr), __VA_ARGS__);
+#define LOG_f(expr, ...) zc_log(zc_log_level_fatal, (expr), __VA_ARGS__);
+#define TRACE LOG_d("  %s", __PRETTY_FUNCTION__)
 
 #ifdef __cplusplus
 }
