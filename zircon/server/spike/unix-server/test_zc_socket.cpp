@@ -12,83 +12,83 @@
 
 TEST_CASE("create socket", "[zc_socket_t]")
 {
-  zc_socket_t* s = new_zc_socket(zc_socket_type_unix);
+  zc_socket_t* s = SOCKET_alloc(zc_socket_type_unix);
   REQUIRE(s != 0);
   zc_socket_error_e e;
   int fd;
-  e = socket_create_unix_socket(s, "/tmp/zircon.sock", &fd);
+  e = SOCKET_socket_un(s, "/tmp/zircon.sock", &fd);
   REQUIRE(e == zc_socket_err_ok);
 
-  delete_instance(s);
+  SOCKET_dealloc(s);
 }
 
 TEST_CASE("configure socket", "[zc_socket_t]")
 {
-  zc_socket_t* s = new_zc_socket(zc_socket_type_unix);
+  zc_socket_t* s = SOCKET_alloc(zc_socket_type_unix);
   REQUIRE(s != 0);
   zc_socket_error_e e;
   int fd;
-  e = socket_create_unix_socket(s, "/tmp/zircon.sock", &fd);
+  e = SOCKET_socket_un(s, "/tmp/zircon.sock", &fd);
   REQUIRE(e == zc_socket_err_ok);
   e = SOCKET_set_nonblocking(s, fd);
   REQUIRE(e == zc_socket_err_ok);
-  e = socket_set_tcpnodelay(s, fd);
+  e = SOCKET_set_tcpnodelay(s, fd);
   REQUIRE(e == zc_socket_err_failed);
-  e = socket_set_keepalive(s, fd);
+  e = SOCKET_set_keepalive(s, fd);
   REQUIRE(e == zc_socket_err_ok);
 
-  delete_instance(s);
+  SOCKET_dealloc(s);
 }
 
 TEST_CASE("bind and listen socket", "[zc_socket_t]")
 {
-  zc_socket_t* s = new_zc_socket(zc_socket_type_unix);
+  zc_socket_t* s = SOCKET_alloc(zc_socket_type_unix);
   REQUIRE(s != 0);
   zc_socket_error_e e;
   int fd;
   struct sockaddr_un sa;
   int backlog = 10;
-  e = socket_create_unix_socket(s, "/tmp/zircon.sock", &fd);
+  e = SOCKET_socket_un(s, "/tmp/zircon.sock", &fd);
   REQUIRE(e == zc_socket_err_ok);
-  e = socket_bind_and_listen(s, fd, &sa, backlog);
+  e = SOCKET_bind_n_listen(s, fd, &sa, backlog);
   REQUIRE(e == zc_socket_err_ok);
 
-  delete_instance(s);
+  SOCKET_dealloc(s);
 }
 TEST_CASE("accept socket", "[zc_socket_t]")
 {
-  zc_socket_t* s = new_zc_socket(zc_socket_type_unix);
+  zc_socket_t* s = SOCKET_alloc(zc_socket_type_unix);
   REQUIRE(s != 0);
   zc_socket_error_e e;
   int fd;
   struct sockaddr_un sa;
   int backlog = 10;
-  e = socket_create_unix_socket(s, "/tmp/zircon.sock", &fd);
+  e = SOCKET_socket_un(s, "/tmp/zircon.sock", &fd);
   REQUIRE(e == zc_socket_err_ok);
-  e = socket_bind_and_listen(s, fd, &sa, backlog);
+  e = SOCKET_bind_n_listen(s, fd, &sa, backlog);
   REQUIRE(e == zc_socket_err_ok);
-  e = socket_accept(s, fd);
+  e = SOCKET_accept(s, fd);
   REQUIRE(e == zc_socket_err_ok);
 
-  delete_instance(s);
+  SOCKET_dealloc(s);
 }
 TEST_CASE("error msg", "[zc_socket_t]")
 {
-  zc_socket_t* s = new_zc_socket(zc_socket_type_unix);
+  zc_socket_t* s = SOCKET_alloc(zc_socket_type_unix);
   REQUIRE(s != 0);
   zc_socket_error_e e;
   int fd;
   struct sockaddr_un sa;
   int backlog = 10;
-  e = socket_create_unix_socket(s, "/tmp/zircon.sock", &fd);
+  e = SOCKET_socket_un(s, "/tmp/zircon.sock", &fd);
   REQUIRE(e == zc_socket_err_ok);
-  e = socket_bind_and_listen(s, fd, &sa, backlog);
+  e = SOCKET_bind_n_listen(s, fd, &sa, backlog);
   REQUIRE(e == zc_socket_err_ok);
-  e = socket_accept(s, fd);
+  e = SOCKET_accept(s, fd);
   REQUIRE(e == zc_socket_err_ok);
 
-  const char* errmsg = socket_error_msg(s);
+  const char* errmsg = SOCKET_error_msg(s);
   REQUIRE(0 != errmsg);
 
-  delete_instance(s);
+  SOCKET_dealloc(s);
 }

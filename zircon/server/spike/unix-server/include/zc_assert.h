@@ -20,7 +20,7 @@ static int g_failure = 0;
 #define assert zc_assert_ok
 #endif
 
-#define zc_assert_not_null(condition)                                   \
+#define ASSERT_not_null(condition)                                   \
   do {                                                                  \
     if ((condition) == NULL) {                                          \
       fprintf(stderr, "Zircon Assertion Ocuured: %s is NULL (%s:%d)\n", \
@@ -30,10 +30,10 @@ static int g_failure = 0;
     }                                                                   \
   } while (0);
 
-#define zc_assert_null(condition)                                       \
+#define ASSERT_is_null(condition)                                       \
   do {                                                                  \
     if ((condition) != NULL) {                                          \
-      fprintf(stderr, "Zircon Assertion Ocuured: %s is NULL (%s:%d)\n", \
+      fprintf(stderr, "Zircon Assertion Ocuured: %s is not NULL (%s:%d)\n", \
           #condition, __FILE__, __LINE__);                              \
       if (g_bail)                                                       \
         abort();                                                        \

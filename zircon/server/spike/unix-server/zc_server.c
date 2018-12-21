@@ -25,8 +25,16 @@ struct tag_server {
 
 // SOMAXCONN = 128
 #define ZC_SERVER_BACKLOG 100
+
+#if defined DEBUG
+#define MAX_ACCEPTS_PER_INVOCATION 10
+#else
+#define MAX_ACCEPTS_PER_INVOCATION 100
+#endif
+
 //#define MAX_ACCEPTS_PER_INVOCATION 1000
 #define MAX_ACCEPTS_PER_INVOCATION 10
+
 
 ZC_PRIVATE int zc_create_socket(zc_server_t* server, const char* path);
 ZC_PRIVATE void __server_did_accept_client_socket(EV_P_ ev_io* io_watcher, int revents);
@@ -34,33 +42,36 @@ ZC_PRIVATE void __server_did_accept_client_socket(EV_P_ ev_io* io_watcher, int r
 // ---------------------------------------------------------------------- Public
 // Impl
 static zc_server_t g_server;
-zc_server_t* zc_server_new(const char* path)
+zc_server_t* SERVER_alloc(const char* path)
 {TRACE
   memset(&g_server, 0, sizeof(g_server));
   zc_server_t* s = &g_server;
   if (path && path[0] != '\0') {
-    char* b = (char*)zc_malloc(strlen(path));
+    char* b = (char*)ZIRCON_malloc(strlen(path));
     if (b) {
       strcpy(b, path);
     }
     s->unix_socket_path_ = b;
   }
-
   return s;
 }
-
-ZC_PUBLIC int zc_server_start(zc_server_t* server)
+void SERVER_dealloc(zc_server_t* thiz)
 {TRACE
-  zc_assert_null((server->evt_loop_)); // not null whoa
-  server->evt_loop_ = EV_DEFAULT;
+  if (thiz) {
+  }
+}
 
-  int err = zc_create_socket(server, server->unix_socket_path_);
+ZC_PUBLIC int SERVER_start(zc_server_t* thiz)
+{TRACE
+  ASSERT_is_null((thiz->evt_loop_)); // not null whoa
+  thiz->evt_loop_ = EV_DEFAULT;
+
+  int err = zc_create_socket(thiz, thiz->unix_socket_path_);
   if (err == zc_ok) {
-    LOGV("socket created.", "");
-    zc_log(zc_log_level_verbose, "yoyo %s", "whoattttt");
+    LOG_v("socket created.", "");
   }
 
-  return 0;
+  return err;
 }
 
 // ----------------------------------------------------------------------
@@ -69,33 +80,37 @@ int zc_create_socket(zc_server_t* server, const char* path)
 {TRACE
   int err = zc_socket_error;
 
-  server->socket_ = new_zc_socket(zc_socket_type_unix);
+  server->socket_ = SOCKET_alloc(zc_socket_type_unix);
   
   zc_socket_error_e e;
-  e = socket_create_unix_socket(server->socket_, server->unix_socket_path_, &(server->fd_));
+
+  e = SOCKET_socket_un(server->socket_, server->unix_socket_path_, &(server->fd_));
+
   if (e != zc_socket_err_ok) {
-    LOGV("couldnot create socket", "");
+    LOG_v("couldnot create socket", "");
     return err;
   }
   e =  SOCKET_set_nonblocking(server->fd_);
   if (e != zc_socket_err_ok) {
-    LOGV("couldnot set nonblocking for socket", "");
+    LOG_v("couldnot set nonblocking for socket", "");
   }
-  e =  socket_set_tcpnodelay(server->fd_);
+  e =  SOCKET_set_tcpnodelay(server->fd_);
   if (e != zc_socket_err_ok) {
-    LOGV("couldnot set tcpnodelay for socket", "");
+    LOG_v("couldnot set tcpnodelay for socket", "");
   }
-  e =  socket_set_keepalive(server->fd_);
+  e =  SOCKET_set_keepalive(server->fd_);
   if (e != zc_socket_err_ok) {
-    LOGV("couldnot set keepalive for socket", "");
+    LOG_v("couldnot set keepalive for socket", "");
   }
-  e = socket_bind_and_listen(server->socket_, server->fd_, &(server->addr_), ZC_SERVER_BACKLOG);
+  e = SOCKET_bind_n_listen(server->socket_, server->fd_, &(server->addr_), ZC_SERVER_BACKLOG);
   if (e != zc_socket_err_ok) {
-    LOGV("couldnot bind", "");
+    LOG_v("couldnot bind", "");
     return err;
   }
   
-  LOGV("looping...", "");
+
+  LOG_v("looping...", "");
+
 
   ev_io_init(&server->io_, __server_did_accept_client_socket, server->fd_,
       EV_READ);
@@ -107,8 +122,10 @@ int zc_create_socket(zc_server_t* server, const char* path)
   // ------------------------- close
   //
   close(server->fd_);
+  
+  SOCKET_dealloc(server->socket_);
 
-  LOGV("Looped!", "");
+  LOG_v("Looped!", "");
 
   return zc_ok;
 }
@@ -123,10 +140,12 @@ ZC_PRIVATE void __pri_accept_many_connections(zc_server_t* server, int sfd) {TRA
   while (max--) {
       zc_socket_error_e e = SOCKET_accept_un(sfd, &cfd);
       if (e == zc_socket_err_failed) {
-        LOGV("error in SOCKET_accept_un", "");
+
+        LOG_v("error in SOCKET_accept_un", "");
         break;
       } else {
-        zc_client_t* c = zc_client_new(cfd);
+        zc_client_t* c = CLIENT_alloc(cfd);
+
         if (c) {
           __server_add_client(server, c);
         }

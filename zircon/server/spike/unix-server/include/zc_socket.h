@@ -21,20 +21,23 @@ typedef enum tag_enum_socket_type {
 
 typedef struct tag_zc_socket zc_socket_t;
 
-ZC_PUBLIC zc_socket_t* new_zc_socket(zc_socket_type type);
-ZC_PUBLIC void delete_instance(zc_socket_t* thiz);
+ZC_PUBLIC zc_socket_t*      SOCKET_alloc(zc_socket_type type);
+ZC_PUBLIC void              SOCKET_dealloc(zc_socket_t* thiz);
 
-ZC_PUBLIC zc_socket_error_e socket_create_unix_socket(zc_socket_t* thiz, const char* local_path, int* fd);
-ZC_PUBLIC zc_socket_error_e socket_bind_and_listen(zc_socket_t* thiz, int fd, struct sockaddr_un* sa, int backlog);
-ZC_PUBLIC zc_socket_error_e socket_connect(zc_socket_t* thiz, int fd);
-ZC_PUBLIC zc_socket_error_e socket_accept(zc_socket_t* thiz, int fd);
+ZC_PUBLIC zc_socket_error_e SOCKET_socket_un(zc_socket_t* thiz, const char* local_path, int* fd);
+ZC_PUBLIC zc_socket_error_e SOCKET_bind_n_listen(zc_socket_t* thiz, int fd, struct sockaddr_un* sa, int backlog);
+ZC_PUBLIC zc_socket_error_e SOCKET_connect(zc_socket_t* thiz, int fd);
+ZC_PUBLIC zc_socket_error_e SOCKET_accept(zc_socket_t* thiz, int fd);
+  
+  ZC_PUBLIC void SOCKET_close(int fd);
 
 ZC_PUBLIC zc_socket_error_e SOCKET_set_nonblocking(int fd);
-ZC_PUBLIC zc_socket_error_e socket_set_tcpnodelay(int fd);
-ZC_PUBLIC zc_socket_error_e socket_set_keepalive(int fd);
-ZC_PUBLIC zc_socket_error_e socket_set_reuseportaddress(int fd);
+ZC_PUBLIC zc_socket_error_e SOCKET_set_tcpnodelay(int fd);
+ZC_PUBLIC zc_socket_error_e SOCKET_set_keepalive(int fd);
+ZC_PUBLIC zc_socket_error_e SOCKET_set_reuseportaddr(int fd);
 
-ZC_PUBLIC const char* socket_error_msg(zc_socket_t* thiz);
+ZC_PUBLIC const char*       SOCKET_error_msg(zc_socket_t* thiz);
+
 ZC_PUBLIC zc_socket_error_e SOCKET_accept_un(const int serversocketfd, int *accepted_fd);
   
 
