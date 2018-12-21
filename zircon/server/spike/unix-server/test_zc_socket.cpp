@@ -30,7 +30,7 @@ TEST_CASE("configure socket", "[zc_socket_t]")
   int fd;
   e = socket_create_unix_socket(s, "/tmp/zircon.sock", &fd);
   REQUIRE(e == zc_socket_err_ok);
-  e = socket_set_nonblocking(s, fd);
+  e = SOCKET_set_nonblocking(s, fd);
   REQUIRE(e == zc_socket_err_ok);
   e = socket_set_tcpnodelay(s, fd);
   REQUIRE(e == zc_socket_err_failed);

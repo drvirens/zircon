@@ -29,13 +29,14 @@ ZC_PUBLIC zc_socket_error_e socket_bind_and_listen(zc_socket_t* thiz, int fd, st
 ZC_PUBLIC zc_socket_error_e socket_connect(zc_socket_t* thiz, int fd);
 ZC_PUBLIC zc_socket_error_e socket_accept(zc_socket_t* thiz, int fd);
 
-ZC_PUBLIC zc_socket_error_e socket_set_nonblocking(zc_socket_t* thiz, int fd);
-ZC_PUBLIC zc_socket_error_e socket_set_tcpnodelay(zc_socket_t* thiz, int fd);
-ZC_PUBLIC zc_socket_error_e socket_set_keepalive(zc_socket_t* thiz, int fd);
-ZC_PUBLIC zc_socket_error_e
-socket_set_reuseportaddress(zc_socket_t* thiz, int fd);
+ZC_PUBLIC zc_socket_error_e SOCKET_set_nonblocking(int fd);
+ZC_PUBLIC zc_socket_error_e socket_set_tcpnodelay(int fd);
+ZC_PUBLIC zc_socket_error_e socket_set_keepalive(int fd);
+ZC_PUBLIC zc_socket_error_e socket_set_reuseportaddress(int fd);
 
 ZC_PUBLIC const char* socket_error_msg(zc_socket_t* thiz);
+ZC_PUBLIC zc_socket_error_e SOCKET_accept_un(const int serversocketfd, int *accepted_fd);
+  
 
 #if defined __cplusplus
 }

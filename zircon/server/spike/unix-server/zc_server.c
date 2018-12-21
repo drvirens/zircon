@@ -15,21 +15,20 @@
 // Private Declarations
 
 struct tag_server {
+  ev_io io_; //must be first member: http://pod.tst.eu/http://cvs.schmorp.de/libev/ev.pod#ASSOCIATING_CUSTOM_DATA_WITH_A_WATCH
   int fd_;
   struct sockaddr_un addr_;
   char* unix_socket_path_;
-  ev_io io_;
   struct ev_loop* evt_loop_;
-  
   zc_socket_t* socket_;
 };
 
 // SOMAXCONN = 128
 #define ZC_SERVER_BACKLOG 100
+//#define MAX_ACCEPTS_PER_INVOCATION 1000
+#define MAX_ACCEPTS_PER_INVOCATION 10
 
 ZC_PRIVATE int zc_create_socket(zc_server_t* server, const char* path);
-ZC_PRIVATE void recv_socket_cb(struct ev_loop* loop, ev_io* w, int revents);
-ZC_PRIVATE void write_socket_cb(struct ev_loop* loop, ev_io* w, int revents);
 ZC_PRIVATE void __server_did_accept_client_socket(EV_P_ ev_io* io_watcher, int revents);
 
 // ---------------------------------------------------------------------- Public
@@ -78,15 +77,15 @@ int zc_create_socket(zc_server_t* server, const char* path)
     LOGV("couldnot create socket", "");
     return err;
   }
-  e =  socket_set_nonblocking(server->socket_, server->fd_);
+  e =  SOCKET_set_nonblocking(server->fd_);
   if (e != zc_socket_err_ok) {
     LOGV("couldnot set nonblocking for socket", "");
   }
-  e =  socket_set_tcpnodelay(server->socket_, server->fd_);
+  e =  socket_set_tcpnodelay(server->fd_);
   if (e != zc_socket_err_ok) {
     LOGV("couldnot set tcpnodelay for socket", "");
   }
-  e =  socket_set_keepalive(server->socket_, server->fd_);
+  e =  socket_set_keepalive(server->fd_);
   if (e != zc_socket_err_ok) {
     LOGV("couldnot set keepalive for socket", "");
   }
@@ -115,12 +114,35 @@ int zc_create_socket(zc_server_t* server, const char* path)
 }
 
 #pragma mark-- libev callbacks
+ZC_PRIVATE void __server_add_client(zc_server_t* server, zc_client_t* client) {TRACE
+  
+}
+ZC_PRIVATE void __pri_accept_many_connections(zc_server_t* server, int sfd) {TRACE
+  int cfd;
+  int max = MAX_ACCEPTS_PER_INVOCATION;
+  while (max--) {
+      zc_socket_error_e e = SOCKET_accept_un(sfd, &cfd);
+      if (e == zc_socket_err_failed) {
+        LOGV("error in SOCKET_accept_un", "");
+        break;
+      } else {
+        zc_client_t* c = zc_client_new(cfd);
+        if (c) {
+          __server_add_client(server, c);
+        }
+      }
+  }
+}
 void __server_did_accept_client_socket(EV_P_ ev_io* io_watcher, int revents)
 {TRACE
-//  int ss = io_watcher->fd;
-//  int fd = zc_net_unix_accept(ss);
-//  if (fd == -1) {
-//    LOGV("error in zc_net_unix_accept", "");
-//  }
-//  zc_client_t* c = zc_client_new(fd);
+  zc_server_t* server = (zc_server_t*)io_watcher;
+  if (server) {
+    char *up = server->unix_socket_path_;
+    if (up) {
+      
+    }
+  }
+  
+  int sfd = io_watcher->fd;
+  __pri_accept_many_connections(server, sfd);
 }
