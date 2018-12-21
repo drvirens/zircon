@@ -92,9 +92,8 @@ ZC_PRIVATE void zc_log_msg(int level, const char* msg)
       processedtime[i++] = *curr++;
     }
 
-    static const char* icon = "VDWEF";
-    fprintf(fp, "%d:%c %s %c %s\n", (int)pid, 'S', processedtime, icon[level],
-        msg);
+    static const char* icon = "vdwef";
+    fprintf(fp, "%d:%c | %s   %c | %s\n", (int)pid, 'S', processedtime, icon[level], msg);
   }
 
   if (!log_to_stdout && fp) {

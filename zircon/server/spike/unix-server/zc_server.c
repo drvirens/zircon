@@ -74,18 +74,27 @@ int zc_create_socket(zc_server_t* server, const char* path)
   
   zc_socket_error_e e;
   e = socket_create_unix_socket(server->socket_, server->unix_socket_path_, &(server->fd_));
-  
-  //e =  socket_set_nonblocking(server->socket_, server->fd_);
-  //e =  socket_set_tcpnodelay(server->socket_, server->fd_);
-  //e =  socket_set_keepalive(server->socket_, server->fd_);
-  
+  if (e != zc_socket_err_ok) {
+    LOGV("couldnot create socket", "");
+    return err;
+  }
+  e =  socket_set_nonblocking(server->socket_, server->fd_);
+  if (e != zc_socket_err_ok) {
+    LOGV("couldnot set nonblocking for socket", "");
+  }
+  e =  socket_set_tcpnodelay(server->socket_, server->fd_);
+  if (e != zc_socket_err_ok) {
+    LOGV("couldnot set tcpnodelay for socket", "");
+  }
+  e =  socket_set_keepalive(server->socket_, server->fd_);
+  if (e != zc_socket_err_ok) {
+    LOGV("couldnot set keepalive for socket", "");
+  }
   e = socket_bind_and_listen(server->socket_, server->fd_, &(server->addr_), ZC_SERVER_BACKLOG);
   if (e != zc_socket_err_ok) {
     LOGV("couldnot bind", "");
     return err;
   }
-  
-  
   
   LOGV("looping...", "");
 
