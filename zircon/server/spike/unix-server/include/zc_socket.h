@@ -37,6 +37,7 @@ ZC_PUBLIC zc_socket_error_e SOCKET_set_keepalive(int fd);
 ZC_PUBLIC zc_socket_error_e SOCKET_set_reuseportaddr(int fd);
 
 ZC_PUBLIC const char*       SOCKET_error_msg(zc_socket_t* thiz);
+
 ZC_PUBLIC zc_socket_error_e SOCKET_accept_un(const int serversocketfd, int *accepted_fd);
   
 

@@ -25,11 +25,16 @@ struct tag_server {
 
 // SOMAXCONN = 128
 #define ZC_SERVER_BACKLOG 100
+
 #if defined DEBUG
 #define MAX_ACCEPTS_PER_INVOCATION 10
 #else
 #define MAX_ACCEPTS_PER_INVOCATION 100
 #endif
+
+//#define MAX_ACCEPTS_PER_INVOCATION 1000
+#define MAX_ACCEPTS_PER_INVOCATION 10
+
 
 ZC_PRIVATE int zc_create_socket(zc_server_t* server, const char* path);
 ZC_PRIVATE void __server_did_accept_client_socket(EV_P_ ev_io* io_watcher, int revents);
@@ -78,7 +83,9 @@ int zc_create_socket(zc_server_t* server, const char* path)
   server->socket_ = SOCKET_alloc(zc_socket_type_unix);
   
   zc_socket_error_e e;
+
   e = SOCKET_socket_un(server->socket_, server->unix_socket_path_, &(server->fd_));
+
   if (e != zc_socket_err_ok) {
     LOG_v("couldnot create socket", "");
     return err;
@@ -101,7 +108,9 @@ int zc_create_socket(zc_server_t* server, const char* path)
     return err;
   }
   
+
   LOG_v("looping...", "");
+
 
   ev_io_init(&server->io_, __server_did_accept_client_socket, server->fd_,
       EV_READ);
@@ -131,10 +140,12 @@ ZC_PRIVATE void __pri_accept_many_connections(zc_server_t* server, int sfd) {TRA
   while (max--) {
       zc_socket_error_e e = SOCKET_accept_un(sfd, &cfd);
       if (e == zc_socket_err_failed) {
+
         LOG_v("error in SOCKET_accept_un", "");
         break;
       } else {
         zc_client_t* c = CLIENT_alloc(cfd);
+
         if (c) {
           __server_add_client(server, c);
         }

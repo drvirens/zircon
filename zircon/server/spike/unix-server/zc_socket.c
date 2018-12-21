@@ -94,6 +94,7 @@ ZC_PUBLIC zc_socket_error_e SOCKET_socket_un(zc_socket_t* thiz,
   return e;
 }
 
+
 ZC_PUBLIC zc_socket_error_e SOCKET_set_reuseportaddr(int fd)
 {
   TRACE
@@ -133,7 +134,9 @@ ZC_PUBLIC zc_socket_error_e SOCKET_set_nonblocking(int fd)
   e = zc_socket_err_ok;
   return e;
 }
+
 ZC_PUBLIC zc_socket_error_e SOCKET_set_tcpnodelay(int fd)
+
 {
   TRACE
   zc_socket_error_e e = zc_socket_err_failed;
@@ -148,7 +151,9 @@ ZC_PUBLIC zc_socket_error_e SOCKET_set_tcpnodelay(int fd)
   e = zc_socket_err_ok;
   return e;
 }
+
 ZC_PUBLIC zc_socket_error_e SOCKET_set_keepalive(int fd)
+
 {
   TRACE
   zc_socket_error_e e = zc_socket_err_failed;

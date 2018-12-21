@@ -23,6 +23,7 @@ ZC_PRIVATE void __common_init(zc_client_t* c, int fd);
 
 // ---------------------------------------------------------------------- Public
 // Impl
+
 ZC_PUBLIC zc_client_t* CLIENT_alloc(int fd)
 {TRACE
   zc_client_t* obj = (zc_client_t*)ZIRCON_malloc(sizeof(zc_client_t));
@@ -48,6 +49,7 @@ ZC_PRIVATE void __common_init(zc_client_t* c, int fd)
   zc_socket_error_e e;
   e =  SOCKET_set_nonblocking(fd);
   if (e != zc_socket_err_ok) {
+
     LOG_v("client couldnot set nonblocking for socket", "");
   }
   e =  SOCKET_set_tcpnodelay(fd);
@@ -57,5 +59,6 @@ ZC_PRIVATE void __common_init(zc_client_t* c, int fd)
   e =  SOCKET_set_keepalive(fd);
   if (e != zc_socket_err_ok) {
     LOG_v("client couldnot set keepalive for socket", "");
+
   }
 }

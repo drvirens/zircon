@@ -10,8 +10,9 @@ extern int main(int argC, char* argV[])
   /*
    Server code start
    */
+
   LOG_v("starting...", "");
-  
+
 //  signal(SIGHUP, SIG_IGN);
 //  signal(SIGPIPE, SIG_IGN);
   
