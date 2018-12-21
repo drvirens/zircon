@@ -10,9 +10,9 @@
 
 #include "zc_socket.h"
 
-TEST_CASE("create socket", "[zc_socket]")
+TEST_CASE("create socket", "[zc_socket_t]")
 {
-  zc_socket* s = new_zc_socket(zc_socket_type_unix);
+  zc_socket_t* s = new_zc_socket(zc_socket_type_unix);
   REQUIRE(s != 0);
   zc_socket_error_e e;
   int fd;
@@ -22,9 +22,9 @@ TEST_CASE("create socket", "[zc_socket]")
   delete_instance(s);
 }
 
-TEST_CASE("configure socket", "[zc_socket]")
+TEST_CASE("configure socket", "[zc_socket_t]")
 {
-  zc_socket* s = new_zc_socket(zc_socket_type_unix);
+  zc_socket_t* s = new_zc_socket(zc_socket_type_unix);
   REQUIRE(s != 0);
   zc_socket_error_e e;
   int fd;
@@ -40,9 +40,9 @@ TEST_CASE("configure socket", "[zc_socket]")
   delete_instance(s);
 }
 
-TEST_CASE("bind and listen socket", "[zc_socket]")
+TEST_CASE("bind and listen socket", "[zc_socket_t]")
 {
-  zc_socket* s = new_zc_socket(zc_socket_type_unix);
+  zc_socket_t* s = new_zc_socket(zc_socket_type_unix);
   REQUIRE(s != 0);
   zc_socket_error_e e;
   int fd;
@@ -55,9 +55,9 @@ TEST_CASE("bind and listen socket", "[zc_socket]")
 
   delete_instance(s);
 }
-TEST_CASE("accept socket", "[zc_socket]")
+TEST_CASE("accept socket", "[zc_socket_t]")
 {
-  zc_socket* s = new_zc_socket(zc_socket_type_unix);
+  zc_socket_t* s = new_zc_socket(zc_socket_type_unix);
   REQUIRE(s != 0);
   zc_socket_error_e e;
   int fd;
@@ -72,9 +72,9 @@ TEST_CASE("accept socket", "[zc_socket]")
 
   delete_instance(s);
 }
-TEST_CASE("error msg", "[zc_socket]")
+TEST_CASE("error msg", "[zc_socket_t]")
 {
-  zc_socket* s = new_zc_socket(zc_socket_type_unix);
+  zc_socket_t* s = new_zc_socket(zc_socket_type_unix);
   REQUIRE(s != 0);
   zc_socket_error_e e;
   int fd;
