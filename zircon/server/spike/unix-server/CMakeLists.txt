@@ -170,6 +170,7 @@ target_sources(${ZC_TEST_NAME}
         "test_zc_log.cpp"
         "test_zc_utils.cpp"
         "test_zc_socket.cpp"
+        "test_zc_list.cpp"
         "test_main.cpp"
 )
 target_include_directories(${ZC_TEST_NAME}

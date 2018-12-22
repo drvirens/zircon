@@ -1,5 +1,5 @@
-#include "zc_server.h"
 #include <catch2/catch.hpp>
+#include "zc_server.h"
 
 TEST_CASE("server test", "[zc_server]")
 {
