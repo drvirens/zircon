@@ -8,7 +8,7 @@ extern "C" {
 #include "zc_utils.h"
 #include <stdlib.h>
 
-typedef struct tag_zc_client zc_client_t;
+typedef struct zc_client zc_client_t;
 
 ZC_PUBLIC zc_client_t* CLIENT_alloc(int fd);
 ZC_PUBLIC void CLIENT_dealloc(zc_client_t* thiz);

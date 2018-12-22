@@ -10,6 +10,8 @@
 #include "zc_client.h"
 #include "zc_log.h"
 #include "zc_socket.h"
+#include "zc_list.h"
+#include "zc_global_constants.h"
 
 // ----------------------------------------------------------------------
 // Private Declarations
@@ -19,8 +21,9 @@ struct tag_server {
   struct ev_loop* evt_loop_;
   int fd_;
   struct sockaddr_un addr_;
-  char* unix_socket_path_;
+  char unix_socket_path_[k_global_path_len];
   zc_socket_t* socket_;
+  zc_list_t *clients_;
 };
 
 // SOMAXCONN = 128
@@ -38,23 +41,30 @@ ZC_PRIVATE void __server_did_accept_client_socket(EV_P_ ev_io* io_watcher, int r
 
 // ---------------------------------------------------------------------- Public
 // Impl
-static zc_server_t g_server;
 zc_server_t* SERVER_alloc(const char* path)
 {TRACE
-  memset(&g_server, 0, sizeof(g_server));
-  zc_server_t* s = &g_server;
-  if (path && path[0] != '\0') {
-    char* b = (char*)ZIRCON_malloc(strlen(path));
-    if (b) {
-      strcpy(b, path);
-    }
-    s->unix_socket_path_ = b;
+  zc_server_t *s;
+  s = (zc_server_t *)ZIRCON_malloc(sizeof(*s));
+  if (!s) {
+    return NULL;
   }
+  memset(s, 0, sizeof(*s));
+  
+  if (path && path[0] != '\0') {
+    size_t len = strlen(path);
+    if (len > 0 && len < k_global_path_len) {
+      strcpy(s->unix_socket_path_, path);
+    }
+  }
+  
+  s->clients_ = LIST_alloc(NULL);
   return s;
 }
 void SERVER_dealloc(zc_server_t* thiz)
 {TRACE
   if (thiz) {
+    LIST_dealloc(thiz->clients_);
+    ZIRCON_malloc(thiz);
   }
 }
 
@@ -127,7 +137,11 @@ int zc_create_socket(zc_server_t* server, const char* path)
 
 #pragma mark-- libev callbacks
 ZC_PRIVATE void __server_add_client(zc_server_t* server, zc_client_t* client) {TRACE
+  if ( !(server && client) ) {
+    return;
+  }
   
+  LIST_push_back(server->clients_, client);
 }
 ZC_PRIVATE void __pri_accept_many_connections(zc_server_t* server, int sfd)
 {//TRACE
