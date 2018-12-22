@@ -1,6 +1,6 @@
 #include <string.h>
 #include <time.h>
-#include <errno.h> 
+#include <errno.h>
 #include <ev.h>
 #include "zc_client.h"
 #include "zc_alloc.h"
@@ -22,6 +22,7 @@ typedef struct zc_client_context {
   int fd_;
   ev_io reader_;
   ev_io writer_;
+  struct ev_loop *loop_;
 } zc_client_context_t;
 
 struct zc_client {
@@ -38,11 +39,12 @@ static void recv_socket_cb(struct ev_loop* loop, ev_io* w, int revents);
 // ---------------------------------------------------------------------- Public
 // Impl
 
-ZC_PUBLIC zc_client_t* CLIENT_alloc(int fd)
+ZC_PUBLIC zc_client_t* CLIENT_alloc(int fd, struct ev_loop *loop)
 {TRACE
   zc_client_t* obj = (zc_client_t*)ZIRCON_malloc(sizeof(zc_client_t));
   if (obj) {
     memset(obj, 0, sizeof(zc_client_t));
+    obj->context_.loop_ = loop;
     __init(obj, fd);
   }
   return obj;
@@ -62,13 +64,15 @@ ZC_PRIVATE void __client_read_cb(EV_P_ ev_io *w, int revents) {TRACE
   recv_socket_cb(EV_A_ w, revents);
 }
 ZC_PRIVATE void __client_write_cb(EV_P_ ev_io *w, int revents) {TRACE
-  
+  write_socket_cb(EV_A_ w, revents);
 }
 ZC_PRIVATE void __setup_io_watchers(zc_client_t* thiz, int fd) {
   ev_io_init(&thiz->context_.reader_, __client_read_cb, fd, EV_READ);
   ev_io_init(&thiz->context_.writer_, __client_write_cb, fd, EV_WRITE);
   thiz->context_.reader_.data = thiz;
   thiz->context_.writer_.data = thiz;
+  ev_io_start(thiz->context_.loop_, &thiz->context_.reader_);
+  ev_io_start(thiz->context_.loop_, &thiz->context_.writer_);
 }
 ZC_PRIVATE void __init(zc_client_t* thiz, int fd)
 {TRACE

@@ -153,7 +153,7 @@ ZC_PRIVATE void __pri_accept_many_connections(zc_server_t* server, int sfd)
         LOG_v("error in SOCKET_accept_un", "");
         break;
       } else {
-        zc_client_t* c = CLIENT_alloc(cfd);
+        zc_client_t* c = CLIENT_alloc(cfd, server->evt_loop_);
         if (c) {
           __server_add_client(server, c);
         }
