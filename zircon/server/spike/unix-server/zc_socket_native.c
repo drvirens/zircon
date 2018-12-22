@@ -10,7 +10,7 @@ ZC_PUBLIC int NET_socket(int domain, int type, int protocol)
 ZC_PUBLIC int NET_accept(int fd, struct sockaddr* addr, socklen_t* len)
 {
   TRACE
-  //return accept(fd, addr, len);
+return accept(fd, addr, len);
 #if defined USE_MOCK_BIND
   return 0;
 #else

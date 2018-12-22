@@ -10,26 +10,29 @@
 #include "zc_client.h"
 #include "zc_log.h"
 #include "zc_socket.h"
+#include "zc_list.h"
+#include "zc_global_constants.h"
 
 // ----------------------------------------------------------------------
 // Private Declarations
 
 struct tag_server {
-  ev_io io_; //must be first member: http://pod.tst.eu/http://cvs.schmorp.de/libev/ev.pod#ASSOCIATING_CUSTOM_DATA_WITH_A_WATCH
+  ev_io io_;
+  struct ev_loop* evt_loop_;
   int fd_;
   struct sockaddr_un addr_;
-  char* unix_socket_path_;
-  struct ev_loop* evt_loop_;
+  char unix_socket_path_[k_global_path_len];
   zc_socket_t* socket_;
+  zc_list_t *clients_;
 };
 
 // SOMAXCONN = 128
-#define ZC_SERVER_BACKLOG 100
+#define ZC_SERVER_BACKLOG 64
 
 #if defined DEBUG
-#define MAX_ACCEPTS_PER_INVOCATION 10
+#define MAX_ACCEPTS_PER_INVOCATION 2 //10
 #else
-#define MAX_ACCEPTS_PER_INVOCATION 100
+#define MAX_ACCEPTS_PER_INVOCATION 2 //100
 #endif
 
 
@@ -38,23 +41,30 @@ ZC_PRIVATE void __server_did_accept_client_socket(EV_P_ ev_io* io_watcher, int r
 
 // ---------------------------------------------------------------------- Public
 // Impl
-static zc_server_t g_server;
 zc_server_t* SERVER_alloc(const char* path)
 {TRACE
-  memset(&g_server, 0, sizeof(g_server));
-  zc_server_t* s = &g_server;
-  if (path && path[0] != '\0') {
-    char* b = (char*)ZIRCON_malloc(strlen(path));
-    if (b) {
-      strcpy(b, path);
-    }
-    s->unix_socket_path_ = b;
+  zc_server_t *s;
+  s = (zc_server_t *)ZIRCON_malloc(sizeof(*s));
+  if (!s) {
+    return NULL;
   }
+  memset(s, 0, sizeof(*s));
+  
+  if (path && path[0] != '\0') {
+    size_t len = strlen(path);
+    if (len > 0 && len < k_global_path_len) {
+      strcpy(s->unix_socket_path_, path);
+    }
+  }
+  
+  s->clients_ = LIST_alloc(NULL);
   return s;
 }
 void SERVER_dealloc(zc_server_t* thiz)
 {TRACE
   if (thiz) {
+    LIST_dealloc(thiz->clients_);
+    ZIRCON_malloc(thiz);
   }
 }
 
@@ -109,10 +119,8 @@ int zc_create_socket(zc_server_t* server, const char* path)
   LOG_v("looping...", "");
 
 
-  ev_io_init(&server->io_, __server_did_accept_client_socket, server->fd_,
-      EV_READ);
+  ev_io_init(&server->io_, __server_did_accept_client_socket, server->fd_, EV_READ);
   ev_io_start(server->evt_loop_, &server->io_);
-
   ev_run(server->evt_loop_, 0);
 
   //
@@ -129,20 +137,23 @@ int zc_create_socket(zc_server_t* server, const char* path)
 
 #pragma mark-- libev callbacks
 ZC_PRIVATE void __server_add_client(zc_server_t* server, zc_client_t* client) {TRACE
+  if ( !(server && client) ) {
+    return;
+  }
   
+  LIST_push_back(server->clients_, client);
 }
-ZC_PRIVATE void __pri_accept_many_connections(zc_server_t* server, int sfd) {TRACE
+ZC_PRIVATE void __pri_accept_many_connections(zc_server_t* server, int sfd)
+{//TRACE
   int cfd;
-  int max = MAX_ACCEPTS_PER_INVOCATION;
+  int max = 1; //MAX_ACCEPTS_PER_INVOCATION;
   while (max--) {
       zc_socket_error_e e = SOCKET_accept_un(sfd, &cfd);
       if (e == zc_socket_err_failed) {
-
         LOG_v("error in SOCKET_accept_un", "");
         break;
       } else {
-        zc_client_t* c = CLIENT_alloc(cfd);
-
+        zc_client_t* c = CLIENT_alloc(cfd, server->evt_loop_);
         if (c) {
           __server_add_client(server, c);
         }
@@ -150,15 +161,9 @@ ZC_PRIVATE void __pri_accept_many_connections(zc_server_t* server, int sfd) {TRA
   }
 }
 void __server_did_accept_client_socket(EV_P_ ev_io* io_watcher, int revents)
-{TRACE
+{//TRACE
   zc_server_t* server = (zc_server_t*)io_watcher;
   if (server) {
-    char *up = server->unix_socket_path_;
-    if (up) {
-      
-    }
+    __pri_accept_many_connections(server, io_watcher->fd);
   }
-  
-  int sfd = io_watcher->fd;
-  __pri_accept_many_connections(server, sfd);
 }

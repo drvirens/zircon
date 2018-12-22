@@ -72,3 +72,25 @@ TEST_CASE("add two nodes in list", "[zc_list]") {
   
   LIST_dealloc(ll);
 }
+
+#include <netdb.h>
+static int foo() {
+  struct addrinfo *ai, hints;
+  memset(&hints, 0, sizeof hints);
+  hints.ai_family = AF_UNSPEC;
+  hints.ai_socktype = SOCK_STREAM;
+  hints.ai_flags = AI_PASSIVE | AI_ADDRCONFIG;
+  
+  const char* host = "www.google.com";
+  const char* port = 0;
+  const int gai_err = getaddrinfo(host, port, &hints, &ai);
+  
+  if (gai_err != 0) {
+    printf("Server get address info failed with [%s]", gai_strerror(gai_err));
+    return -1;
+  }
+  return 0;
+}
+TEST_CASE("foff", "netdb") {
+  foo();
+}

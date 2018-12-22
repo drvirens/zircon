@@ -5,12 +5,13 @@
 extern "C" {
 #endif
 
-#include "zc_utils.h"
 #include <stdlib.h>
+#include <ev.h>
+#include "zc_utils.h"
 
-typedef struct tag_zc_client zc_client_t;
+typedef struct zc_client zc_client_t;
 
-ZC_PUBLIC zc_client_t* CLIENT_alloc(int fd);
+ZC_PUBLIC zc_client_t* CLIENT_alloc(int fd, struct ev_loop *loop);
 ZC_PUBLIC void CLIENT_dealloc(zc_client_t* thiz);
 
 #ifdef __cplusplus
