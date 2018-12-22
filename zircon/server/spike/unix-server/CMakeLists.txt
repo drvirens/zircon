@@ -46,6 +46,7 @@ target_sources(${ZC_LIB_NAME}
         "zc_client.c"
         "zc_socket.c"
         "zc_socket_native.c"
+        "zc_list.c"
 
     PUBLIC
         "${CMAKE_CURRENT_LIST_DIR}/include/zc_utils.h"
@@ -57,6 +58,7 @@ target_sources(${ZC_LIB_NAME}
         "${CMAKE_CURRENT_LIST_DIR}/include/zc_socket.h"
         "${CMAKE_CURRENT_LIST_DIR}/include/zc_global_constants.h"
         "${CMAKE_CURRENT_LIST_DIR}/include/zc_socket_native.h"
+        "${CMAKE_CURRENT_LIST_DIR}/include/zc_list.h"
 
     )
 target_include_directories(${ZC_LIB_NAME}
@@ -103,6 +105,7 @@ target_include_directories(${ZC_SERVER_NAME}
         "${CMAKE_CURRENT_LIST_DIR}/include/zc_socket.h"
         "${CMAKE_CURRENT_LIST_DIR}/include/zc_global_constants.h"
         "${CMAKE_CURRENT_LIST_DIR}/include/zc_socket_native.h"
+        "${CMAKE_CURRENT_LIST_DIR}/include/zc_list.h"
 
     PRIVATE ${LIBEV_INCLUDE_DIR}
 )
@@ -140,6 +143,7 @@ target_include_directories(${ZC_SAMPLE_CLIENT_NAME}
         "${CMAKE_CURRENT_LIST_DIR}/include/zc_socket.h"
         "${CMAKE_CURRENT_LIST_DIR}/include/zc_global_constants.h"
         "${CMAKE_CURRENT_LIST_DIR}/include/zc_socket_native.h"
+        "${CMAKE_CURRENT_LIST_DIR}/include/zc_list.h"
 )
 target_link_libraries(${ZC_SAMPLE_CLIENT_NAME} ${ZC_LIB_NAME})
 
@@ -178,6 +182,7 @@ target_include_directories(${ZC_TEST_NAME}
         "${CMAKE_CURRENT_LIST_DIR}/include/zc_socket.h"
         "${CMAKE_CURRENT_LIST_DIR}/include/zc_global_constants.h"
         "${CMAKE_CURRENT_LIST_DIR}/include/zc_socket_native.h"
+        "${CMAKE_CURRENT_LIST_DIR}/include/zc_list.h"
 )
 
 target_link_libraries(${ZC_TEST_NAME} ${ZC_LIB_NAME})
