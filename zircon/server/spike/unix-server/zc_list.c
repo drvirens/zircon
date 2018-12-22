@@ -4,8 +4,8 @@
 #include "zc_alloc.h"
 
 struct zc_node {
-  struct tag_node *next_;
-  struct tag_node *prev_;
+  struct zc_node *next_;
+  struct zc_node *prev_;
   void *data_;
   void (*data_deleter_)(void */*ptr*/);
 };
@@ -38,7 +38,6 @@ ZC_PUBLIC void NODE_dealloc(zc_node_t *thiz)
   if (!thiz) {
     return;
   }
-  
   if (thiz->data_deleter_) {
     (*(thiz->data_deleter_))(thiz);
   }
@@ -79,13 +78,17 @@ ZC_PUBLIC void LIST_dealloc(zc_list_t *thiz)
 ZC_PUBLIC zc_list_t *LIST_push_back(zc_list_t *thiz, void *data)
 {TRACE
   void(*data_deleter)(void*) = thiz->node_data_deleter_;
-  TODO("provide default deleter ");
   zc_node_t *n = NODE_alloc(data, data_deleter);
   if (!n) {
     return NULL;
   }
-  
-
+  if (thiz->len_ == 0) {
+    thiz->head_ = thiz->tail_ = n;
+  } else {
+    n->prev_ = thiz->tail_;
+    thiz->tail_->next_ = n;
+    thiz->tail_ = n;
+  }
   (thiz->len_)++;
   return thiz;
 }
