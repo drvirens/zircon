@@ -1,6 +1,7 @@
 #include <string.h>
 #include <time.h>
 #include <errno.h>
+#include <stdio.h>
 #include <ev.h>
 #include "zc_client.h"
 #include "zc_alloc.h"
