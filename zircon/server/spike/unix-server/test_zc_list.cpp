@@ -14,12 +14,16 @@ static void __zc_test_fw_free(void *ptr) {
 
 TEST_CASE("create list", "[zc_list]") {
   zc_list_t *ll = LIST_alloc(&__zc_test_fw_free);
+  unsigned long len = LIST_len(ll);
+  REQUIRE(len == 0);
   REQUIRE(ll != 0);
 }
 
 TEST_CASE("delete list", "[zc_list]") {
   zc_list_t *ll = LIST_alloc(&__zc_test_fw_free);
   REQUIRE(ll != 0);
+  unsigned long len = LIST_len(ll);
+  REQUIRE(len == 0);
   LIST_dealloc(ll);
 }
 
@@ -27,11 +31,13 @@ TEST_CASE("last node in list", "[zc_list]") {
   zc_list_t *ll = LIST_alloc(&__zc_test_fw_free);
   REQUIRE(ll != 0);
   zc_node_t *tail = LIST_tail(ll);
-  REQUIRE(tail != 0);
+  REQUIRE(tail == 0);
+  unsigned long len = LIST_len(ll);
+  REQUIRE(len == 0);
   LIST_dealloc(ll);
 }
 
-TEST_CASE("add node in list", "[zc_list]") {
+TEST_CASE("add one node in list", "[zc_list]") {
   zc_list_t *ll = LIST_alloc(&__zc_test_fw_free);
   REQUIRE(ll != 0);
   int data = 1;
@@ -39,6 +45,31 @@ TEST_CASE("add node in list", "[zc_list]") {
   REQUIRE(own == ll);
   unsigned long len = LIST_len(ll);
   REQUIRE(len == 1);
+  zc_node_t *tail = LIST_tail(ll);
+  REQUIRE(tail != 0);
+  LIST_dealloc(ll);
+}
+
+
+TEST_CASE("add two nodes in list", "[zc_list]") {
+  zc_list_t *ll = LIST_alloc(&__zc_test_fw_free);
+  REQUIRE(ll != 0);
+  int data = 1;
+  zc_list_t *own = LIST_push_back(ll, &data);
+  REQUIRE(own == ll);
+  unsigned long len = LIST_len(ll);
+  REQUIRE(len == 1);
+  zc_node_t *tail = LIST_tail(ll);
+  REQUIRE(tail != 0);
+  
+  int data_2 = 2;
+  LIST_push_back(ll, &data_2);
+  len = LIST_len(ll);
+  REQUIRE(len == 2);
+  
+  tail = LIST_tail(ll);
+  REQUIRE(tail != 0);
+  
   LIST_dealloc(ll);
 }
 
