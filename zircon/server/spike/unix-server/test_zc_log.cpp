@@ -1,5 +1,5 @@
-#include "zc_log.h"
 #include <catch2/catch.hpp>
+#include "zc_log.h"
 
 TEST_CASE("log verbose msg", "[zc_log]")
 {

@@ -30,11 +30,11 @@ TEST_CASE("configure socket", "[zc_socket_t]")
   int fd;
   e = SOCKET_socket_un(s, "/tmp/zircon.sock", &fd);
   REQUIRE(e == zc_socket_err_ok);
-  e = SOCKET_set_nonblocking(s, fd);
+  e = SOCKET_set_nonblocking(fd);
   REQUIRE(e == zc_socket_err_ok);
-  e = SOCKET_set_tcpnodelay(s, fd);
+  e = SOCKET_set_tcpnodelay(fd);
   REQUIRE(e == zc_socket_err_failed);
-  e = SOCKET_set_keepalive(s, fd);
+  e = SOCKET_set_keepalive(fd);
   REQUIRE(e == zc_socket_err_ok);
 
   SOCKET_dealloc(s);

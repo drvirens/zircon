@@ -32,9 +32,6 @@ struct tag_server {
 #define MAX_ACCEPTS_PER_INVOCATION 100
 #endif
 
-//#define MAX_ACCEPTS_PER_INVOCATION 1000
-#define MAX_ACCEPTS_PER_INVOCATION 10
-
 
 ZC_PRIVATE int zc_create_socket(zc_server_t* server, const char* path);
 ZC_PRIVATE void __server_did_accept_client_socket(EV_P_ ev_io* io_watcher, int revents);
