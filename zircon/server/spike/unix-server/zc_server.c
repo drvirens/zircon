@@ -15,16 +15,16 @@
 // Private Declarations
 
 struct tag_server {
-  ev_io io_; //must be first member: http://pod.tst.eu/http://cvs.schmorp.de/libev/ev.pod#ASSOCIATING_CUSTOM_DATA_WITH_A_WATCH
+  ev_io io_;
+  struct ev_loop* evt_loop_;
   int fd_;
   struct sockaddr_un addr_;
   char* unix_socket_path_;
-  struct ev_loop* evt_loop_;
   zc_socket_t* socket_;
 };
 
 // SOMAXCONN = 128
-#define ZC_SERVER_BACKLOG 100
+#define ZC_SERVER_BACKLOG 64
 
 #if defined DEBUG
 #define MAX_ACCEPTS_PER_INVOCATION 2 //10
