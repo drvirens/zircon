@@ -72,13 +72,3 @@ TEST_CASE("add two nodes in list", "[zc_list]") {
   
   LIST_dealloc(ll);
 }
-
-//TEST_CASE("create kist", "[zc_list]") {
-//  zc_list_t *ll = LIST_alloc();
-//  REQUIRE(ll != 0);
-//}
-//
-//TEST_CASE("create kist", "[zc_list]") {
-//  zc_list_t *ll = LIST_alloc();
-//  REQUIRE(ll != 0);
-//}
